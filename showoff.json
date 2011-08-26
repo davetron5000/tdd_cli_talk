@@ -1,0 +1,6 @@
+{ "name": "TDD your CLI", "sections": [ 
+    { "section":"intro"} ,
+    { "section":"demo"} ,
+    { "section":"conclusion"}
+    ]
+}
