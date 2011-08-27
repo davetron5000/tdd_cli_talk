@@ -45,6 +45,14 @@ code.result {
     font-weight: bold;
 }
 
+.test {
+    color: #A30050;
+}
+
+.fix {
+    color: #7AB800;
+}
+
 /*
  *        orig       Opower
  * color: black      black
