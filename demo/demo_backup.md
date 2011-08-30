@@ -97,7 +97,7 @@
 # Design for testability
 
     @@@ Cucumber
-    Scenario: Symlink my dotfiles
+    Scenario: Symlink my dotfiles to an arbitrary directory
       Given an empty directory "/tmp/dotfiles"
       And I have my dotfiles at \
         "git://github.com/davetron5000/testdotfiles.git"
@@ -265,6 +265,32 @@
 
     include FileUtils
 
+    option_parser = OptionParser.new do |opts|
+      executable_name = File.basename(__FILE__)
+      opts.banner = "Usage: #{executable_name} [options]"
+    end
+
+    option_parser.parse!
+
+    repo = ARGV[0]
+    checkout_dir = ARGV[1]
+
+    mkdir_p checkout_dir
+    chdir checkout_dir
+    `git clone #{repo} dotfiles`
+
+!SLIDE smaller
+# Refactor
+## main methods are helpful
+
+    @@@Ruby
+    #!/usr/bin/env ruby -w
+
+    require 'optparse'
+    require 'fileutils'
+
+    include FileUtils
+
     def main(repo,checkout_dir)
       mkdir_p checkout_dir
       chdir checkout_dir
@@ -277,6 +303,7 @@
 
 !SLIDE smaller
 # Refactor
+## crazy logic -> method
 
     @@@Ruby
     def dotfiles(dotfiles_dir)
@@ -289,6 +316,7 @@
 
 !SLIDE smaller
 # Refactor
+# Parsing CLI last
 
     @@@Ruby
     option_parser = OptionParser.new do |opts|
@@ -314,9 +342,9 @@
         "dotfiles" in my home directory 
       And my dotfiles should be symlinked in my home directory 
 
-!SLIDE smaller bullets
+!SLIDE bullets incremental
 # We're on production
-
+* "in my home directory" vs "~"
 !SLIDE small
 # Change where $HOME is
     @@@ Ruby
@@ -425,10 +453,98 @@
 # Refactor?
 * Not this time
 
+!SLIDE commandline
+# The UI sucks
+
+    $ fullstop --help
+    Usage: fullstop [options]
+    
+!SLIDE bullets incremental
+# The UI sucks
+* There are (currently) no options
+* There are two (undocumented) arguments
+
+!SLIDE small
+# New scenario
+
+    @@@Cucumber
+    Scenario: Our UI is decent
+      When I run `fullstop --help`
+      Then there should be a banner
+      And the banner should not include options
+      And the banner should document that the arguments 
+        are "repo [checkout_dir]"
+
+!SLIDE small
+# Implement tests
+
+    @@@Ruby
+    Then /^there should be a banner$/ do
+      Then %(the output should contain "Usage: fullstop")
+    end
+
+    Then /^the banner should not include options$/ do
+      Then %(the output should not contain "[options]")
+    end
+
+    Then /^the banner should document that the 
+           arguments are "([^"]*)"$/ do |args|
+      Then %(the output should contain "#{args}")
+    end
+
+!SLIDE small commandline incremental
+    $ rake features
+    (in /Users/davec/Projects/tdd_talk/fullstop/3_fix_ui)
+    mkdir -p /tmp/fakehome
+    ..F-
+
+    (::) failed steps (::)
+
+    expected "Usage: fullstop [options]\n" not to include "[options]"
+    Diff:
+    @@ -1,2 +1,2 @@
+    -[options]
+    +Usage: fullstop [options]
+     (RSpec::Expectations::ExpectationNotMetError)
+    features/fullstop.feature:21:in `And the banner should not include options'
+
+    Failing Scenarios:
+    cucumber features/fullstop.feature:18 # Scenario: Our UI is decent
+
+    1 scenario (1 failed)
+    4 steps (1 failed, 1 skipped, 2 passed)
+    0m0.122s
+    rake aborted!
+    Cucumber failed
+
+!SLIDE small
+# Fix
+
+    @@@Ruby
+    option_parser = OptionParser.new do |opts|
+      executable_name = File.basename(__FILE__)
+      opts.banner = 
+        "Usage: #{executable_name} repo [checkout_dir]"
+    end
+
+!SLIDE commandline incremental
+# YES
+    $ rake features
+    (in /Users/davec/Projects/tdd_talk/fullstop/3_fix_ui)
+    mkdir -p /tmp/fakehome
+    ....
+
+    1 scenario (1 passed)
+    4 steps (4 passed)
+    0m0.125s
+    $ fullstop --help
+    Usage: fullstop repo [checkout_dir]
+
+
 !SLIDE bullets incremental
 # Now what
 * Check for repo on command line
-* Test for better help
+* Add better help (e.g. what is `checkout_dir`'s default)
 * New feature to control where dotfiles are checked out
 * These are exercises for the viewer
 
