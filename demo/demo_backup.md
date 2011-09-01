@@ -80,10 +80,10 @@
       I want to be able to set up a new user account easily
 
       Scenario: Symlink my dotfiles
-        Given I have my dotfiles at \
-          "git://github.com/davetron5000/testdotfiles.git"
-        When I successfully run \
-          `fullstop git://github.com/davetron5000/testdotfiles.git`
+        Given I have my dotfiles in a git repo at \
+          "/Users/davec/Projects/testdotfiles"
+        When I successfully run 
+          `fullstop /Users/davec/Projects/testdotfiles"
         Then my dotfiles should be checked out in "~/dotfiles"
         And my dotfiles should be symlinked in "~/"
     
@@ -99,16 +99,19 @@
     @@@ Cucumber
     Scenario: Symlink my dotfiles to an arbitrary directory
       Given an empty directory "/tmp/dotfiles"
-      And I have my dotfiles at \
-        "git://github.com/davetron5000/testdotfiles.git"
+      And I have my dotfiles in a git repo at \
+        "/Users/davec/Projects/testdotfiles"
       When I successfully run \
-        `fullstop git://github.com/davetron5000/testdotfiles.git \
-          /tmp/dotfiles`
+        `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles`
       Then my dotfiles should be checked out in \
         "/tmp/dotfiles/dotfiles"
       And my dotfiles should be symlinked in "/tmp/dotfiles"
 
-!SLIDE commandline incremental small
+!SLIDE
+# Watch it fail
+_cd 1 ; rake features_
+
+!SLIDE commandline small
 # Watch it fail
 
     $ rake features
@@ -139,12 +142,9 @@
 
 !SLIDE smaller
 # Make our tests not pend
+## Given an empty directory
 
     @@@Ruby
-    include FileUtils
-
-    FILES_IN_REPO = ['.bashrc','.vimrc','.inputrc']
-
     Given /^an empty directory "([^"]*)"$/ do |dir|
       unless File.split(dir)[0] == "/tmp"
         raise "Probably not what you want" 
@@ -152,44 +152,100 @@
       rm_rf dir, :secure => true, :verbose => false
     end
 
-    Given /^I have my dotfiles at "([^"]*)"$/ { |repo| @repo = repo }
+!SLIDE smaller
+# Make our tests not pend
+## Given I have dotfiles in git
 
+    @@@Ruby
+    Given /^I have my dotfiles in a git repo at "([^"]*)"$/ do |repo|
+      # no-op until we need the repo
+    end
+
+!SLIDE smaller
+# Make our tests not pend
+## Then my dotfiles should be checked out
+
+    @@@Ruby
     Then /^my dotfiles should be checked out in "([^"]*)"$/ do |dir|
-      FILES_IN_REPO.each do |file|
+      ['.bashrc','.vimrc','.inputrc'].each do |file|
         Then %(a file named "#{File.join(dir,file)}" should exist)
       end
     end
 
+!SLIDE smaller
+# Make our tests not pend
+## And they should be symlinked
+
+    @@@Ruby
     Then /^my dotfiles should be symlinked in "([^"]*)"$/ do |dir|
-      FILES_IN_REPO.each do |file|
+      ['.bashrc','.vimrc','.inputrc'].each do |file|
         Then %(a file named "#{File.join(dir,file)}" should exist)
       end
     end
+    
 
-!SLIDE commandline smaller incremental
+!SLIDE 
 # Try it again
 
+_(cd 2 ; rake features)_
+
+!SLIDE commandline smaller 
+# Try it again
     $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/1_first_feature)
-    ...F-
+    (in /Users/davec/Projects/tdd_talk/fullstop/2)
+    Feature: Install my dotfiles
+      As an organized developer who has his dotfiles on github
+      I want to be able to set up a new user account easily
 
-    (::) failed steps (::)
-
-    expected file?("/tmp/dotfiles/dotfiles/.bashrc") to return true, got false 
-    features/fullstop.feature:9:in `Then my dotfiles should be checked out in \
-      "/tmp/dotfiles/dotfiles"'
+      Scenario: Symlink my dotfiles to an arbitrary directory                               # features/fullstop.feature:5
+        Given an empty directory "/tmp/dotfiles"                                            # features/step_definitions/fullstop_steps.rb:1
+        And I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"        # features/step_definitions/fullstop_steps.rb:8
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles` # aruba-0.4.6/lib/aruba/cucumber.rb:61
+        Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"                  # features/step_definitions/fullstop_steps.rb:12
+          expected file?("/tmp/dotfiles/dotfiles/.bashrc") to return true, got false (RSpec::Expectations::ExpectationNotMetError)
+          features/fullstop.feature:9:in `Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"'
+        And my dotfiles should be symlinked in "/tmp/dotfiles"                              # features/step_definitions/fullstop_steps.rb:18
 
     Failing Scenarios:
-    cucumber features/fullstop.feature:5 # Scenario: Symlink my dotfiles
+    cucumber features/fullstop.feature:5 # Scenario: Symlink my dotfiles to an arbitrary directory
 
     1 scenario (1 failed)
     5 steps (1 failed, 1 skipped, 3 passed)
-    0m0.125s
+    0m0.136s
     rake aborted!
     Cucumber failed
-   
+
 !SLIDE smaller
 # Let's fix this 
+## Initial
+
+    @@@Ruby
+    #!/usr/bin/env ruby -w
+
+    require 'optparse'
+    
+
+    
+
+    option_parser = OptionParser.new do |opts|
+      executable_name = File.basename(__FILE__)
+      opts.banner = "Usage: #{executable_name} [options]"
+    end
+
+    option_parser.parse!
+
+    
+    
+
+    
+    
+
+    
+    #
+
+!SLIDE smaller
+# Let's fix this 
+## Fixed
 
     @@@Ruby
     #!/usr/bin/env ruby -w
@@ -211,40 +267,102 @@
 
     mkdir_p checkout_dir
     chdir checkout_dir
-    `git clone #{repo} dotfiles`
 
-!SLIDE smaller commandline incremental
+    %x[git clone #{repo} dotfiles]
+    #
+
+!SLIDE 
+# We got farther
+
+_cd 3 ; rake features_
+
+!SLIDE smaller commandline 
 # We got farther
 
     $ rake features
-    (::) failed steps (::)
+    (in /Users/davec/Projects/tdd_talk/fullstop/3)
+    Feature: Install my dotfiles
+      As an organized developer who has his dotfiles on github
+      I want to be able to set up a new user account easily
 
-    expected file?("/tmp/dotfiles/.bashrc") to return true, got false 
-    features/fullstop.feature:11:in `And my dotfiles should be symlinked \
-      in "/tmp/dotfiles"'
+      Scenario: Symlink my dotfiles to an arbitrary directory                               # features/fullstop.feature:5
+        Given an empty directory "/tmp/dotfiles"                                            # features/step_definitions/fullstop_steps.rb:1
+        And I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"        # features/step_definitions/fullstop_steps.rb:8
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles` # aruba-0.4.6/lib/aruba/cucumber.rb:61
+        Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"                  # features/step_definitions/fullstop_steps.rb:12
+        And my dotfiles should be symlinked in "/tmp/dotfiles"                              # features/step_definitions/fullstop_steps.rb:18
+          expected file?("/tmp/dotfiles/.bashrc") to return true, got false (RSpec::Expectations::ExpectationNotMetError)
+          features/fullstop.feature:10:in `And my dotfiles should be symlinked in "/tmp/dotfiles"'
 
     Failing Scenarios:
-    cucumber features/fullstop.feature:6 # Scenario: Symlink my dotfiles
+    cucumber features/fullstop.feature:5 # Scenario: Symlink my dotfiles to an arbitrary directory
 
     1 scenario (1 failed)
     5 steps (1 failed, 4 passed)
-    0m0.331s
+    0m0.136s
     rake aborted!
     Cucumber failed
+
+    (See full trace by running task with --trace)
+    
    
 !SLIDE smaller
 # OK, fix THIS
+## Where we are
 
     @@@Ruby
-    dotfiles_dir = File.join(checkout_dir,'dotfiles')
-    Dir["#{dotfiles_dir}/.*","#{dotfiles_dir}/*"].each do |file|
-      if File.basename(file) != '..' && File.basename(file) != '.'
-        ln_s file,'.'
+
+    # ...
+
+    option_parser.parse!
+
+    repo = ARGV[0]
+    checkout_dir = ARGV[1]
+
+    mkdir_p checkout_dir
+    chdir checkout_dir
+
+    %x[git clone #{repo} dotfiles]
+
+
+
+
+
+
+
+    #
+
+!SLIDE smaller
+# OK, fix THIS
+## Fixed
+
+    @@@Ruby
+
+    # ...
+
+    option_parser.parse!
+
+    repo = ARGV[0]
+    checkout_dir = ARGV[1]
+
+    mkdir_p checkout_dir
+    chdir checkout_dir
+
+    %x[git clone #{repo} dotfiles]
+
+    Dir["#{checkout_dir}/dotfiles/{*,.*}"].each do |file|
+      basename = File.basename(file)
+      if basename != '.' && basename != '..'
+        ln file,'.'
       end
     end
+    #
 
-!SLIDE smaller    
-# Hells yeah
+!SLIDE 
+# Feature done?
+
+!SLIDE commandline
+# Feature done.
 
     $ rake features
     (in /Users/davec/Projects/tdd_talk/fullstop/1_first_feature)

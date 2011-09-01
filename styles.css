@@ -110,6 +110,3 @@ pre.sh_sourceCode .sh_section { color: black; font-weight: bold; }
 pre.sh_sourceCode .sh_paren { color: #A30050; }
 pre.sh_sourceCode .sh_attribute { color: #7AB800; }
 
-pre {
-    line-height: 30px;
-}

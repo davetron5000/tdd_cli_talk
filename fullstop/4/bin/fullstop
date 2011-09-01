@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby -w
+
+require 'optparse'
+require 'fileutils'
+
+include FileUtils
+
+option_parser = OptionParser.new do |opts|
+  executable_name = File.basename(__FILE__)
+  opts.banner = "Usage: #{executable_name} [options]"
+end
+
+option_parser.parse!
+
+repo = ARGV[0]
+checkout_dir = ARGV[1]
+
+mkdir_p checkout_dir
+chdir checkout_dir
+
+%x[git clone #{repo} dotfiles]
+
+Dir["#{checkout_dir}/dotfiles/{*,.*}"].each do |file|
+  basename = File.basename(file)
+  if basename != '.' && basename != '..'
+    ln file,'.'
+  end
+end
