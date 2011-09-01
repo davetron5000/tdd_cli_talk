@@ -361,6 +361,8 @@ _cd 3 ; rake features_
 !SLIDE 
 # Feature done?
 
+_cd 4; rake features_
+
 !SLIDE commandline
 # Feature done.
 
@@ -372,172 +374,175 @@ _cd 3 ; rake features_
     5 steps (5 passed)
     0m0.331s
 
-!SLIDE smaller
+!SLIDE bullets incremental
 # Refactor
+* Big procedural blob
+* Option parsing boilerplate up front
+* Nasty `Dir[]` expression
+
+!SLIDE 
+# Outline of ideal app
 
     @@@Ruby
     #!/usr/bin/env ruby -w
-
     require 'optparse'
     require 'fileutils'
 
     include FileUtils
 
-    option_parser = OptionParser.new do |opts|
-      executable_name = File.basename(__FILE__)
-      opts.banner = "Usage: #{executable_name} [options]"
-    end
+    # main logic
+    # supplemental methods
+    # UI setup
+    # parse command-line and go!
 
-    option_parser.parse!
-
-    repo = ARGV[0]
-    checkout_dir = ARGV[1]
-
-    mkdir_p checkout_dir
-    chdir checkout_dir
-    `git clone #{repo} dotfiles`
-
-!SLIDE smaller
-# Refactor
-## main methods are helpful
+!SLIDE 
+# main logic
 
     @@@Ruby
-    #!/usr/bin/env ruby -w
-
-    require 'optparse'
-    require 'fileutils'
-
-    include FileUtils
-
     def main(repo,checkout_dir)
       mkdir_p checkout_dir
       chdir checkout_dir
-      `git clone #{repo} dotfiles`
 
-      dotfiles(File.join(checkout_dir,'dotfiles')) do |file|
-        ln_s file,'.'
+      %x[git clone #{repo} dotfiles]
+
+      dotfiles_in(checkout_dir) do |file| 
+        ln file,'.'
       end
     end
 
-!SLIDE smaller
-# Refactor
-## crazy logic -> method
+!SLIDE small
+# supplemental methods
 
     @@@Ruby
-    def dotfiles(dotfiles_dir)
-      Dir["#{dotfiles_dir}/{*,.*}"].each do |file|
-        if File.basename(file) != '..' && File.basename(file) != '.'
+    def dotfiles_in(dir)
+      Dir["#{dir}/dotfiles/{*,.*}"].each do |file|
+        basename = File.basename(file)
+        if basename != '.' && basename != '..'
           yield file
         end
       end
     end
 
-!SLIDE smaller
-# Refactor
-# Parsing CLI last
+!SLIDE small
+# UI setup
 
-    @@@Ruby
+    @@@ Ruby
     option_parser = OptionParser.new do |opts|
       executable_name = File.basename(__FILE__)
       opts.banner = "Usage: #{executable_name} [options]"
     end
 
-    option_parser.parse!
-
-    main(ARGV[0],ARGV[1])
-
-
-!SLIDE smaller
-# We WANT ~ to be default
-
-    @@@Cucumber
-    Scenario: Use my home directory by default
-      Given I have my dotfiles at \
-        "git://github.com/davetron5000/testdotfiles.git"
-      When I successfully run \
-        `fullstop git://github.com/davetron5000/testdotfiles.git`
-      Then my dotfiles should be checked out in \
-        "dotfiles" in my home directory 
-      And my dotfiles should be symlinked in my home directory 
-
-!SLIDE bullets incremental
-# We're on production
-* "in my home directory" vs "~"
-!SLIDE small
-# Change where $HOME is
-    @@@ Ruby
-    Before do
-      @real_home = ENV['HOME']
-      fake_home = File.join('/tmp','fakehome').to_s
-      rm_rf fake_home, :verbose => false, :secure => true
-      mkdir_p fake_home
-      ENV['HOME'] = fake_home
-    end
-
-    After do 
-      ENV['HOME'] = @real_home
-    end
-
-
-!SLIDE smaller commandline incremental
-
-    $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/2_edge_cases)
-    ......FUU
-
-    (::) failed steps (::)
-
-    Exit status was 1 but expected it to be 0. Output:
-
-    /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `path': can't convert nil into String (TypeError)
-      from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `block in fu_list'
-      from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `map'
-      from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `fu_list'
-      from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:197:in `mkdir_p'
-      from /Users/davec/Projects/tdd_talk/fullstop/2_edge_cases/bin/fullstop:9:in `main'
-      from /Users/davec/Projects/tdd_talk/fullstop/2_edge_cases/bin/fullstop:33:in `<main>'
-
-     (RSpec::Expectations::ExpectationNotMetError)
-    features/fullstop.feature:14:in `When I successfully run `fullstop git://github.com/davetron5000/testdotfiles.git`'
-
-    Failing Scenarios:
-    cucumber features/fullstop.feature:12 # Scenario: Use my home directory by default
-
-    2 scenarios (1 failed, 1 passed)
-    9 steps (1 failed, 2 undefined, 6 passed)
-    0m1.454s
-
-    You can implement step definitions for undefined steps with these snippets:
-
-    Then /^my dotfiles should be checked out in "([^"]*)" in my home directory$/ do |arg1|
-      pending # express the regexp above with the code you wish you had
-    end
-
-    Then /^my dotfiles should be symlinked in my home directory$/ do
-      pending # express the regexp above with the code you wish you had
-    end
-
-!SLIDE smaller
-# Make tests
+!SLIDE
+# parse command-line and go!
 
     @@@Ruby
-    Then /^my dotfiles should be checked out in "([^"]*)" 
-           in my home directory$/ do |dir|
+    option_parser.parse!
+
+    repo = ARGV[0]
+    checkout_dir = ARGV[1]
+
+    main(repo,checkout_dir)
+
+!SLIDE
+# We still want `~` to be default
+
+!SLIDE smaller
+# We still want `~` to be default
+
+    @@@Cucumber
+    Scenario: It should install into my home directory by default
+      Given I have my dotfiles in a git repo at \
+          "/Users/davec/Projects/testdotfiles"
+      When I successfully run \
+          `fullstop /Users/davec/Projects/testdotfiles`
+      Then my dotfiles should be checked out \
+          in "dotfiles" in my home directory
+      And my dotfiles should be symlinked in my home directory
+
+!SLIDE bullets incremental
+# Don't forget:
+## We're on production
+* "in my home directory" vs "~"
+
+!SLIDE small
+# Change where $HOME is
+## `features/support/env.rb`
+    @@@ Ruby
+    FAKE_HOME = '/tmp/fakehome'
+
+    Before do
+      @real_home = ENV['HOME']
+      ENV['HOME'] = '/tmp/fakehome'
+      rm_rf FAKE_HOME, :secure => true, :verbose => false
+      mkdir FAKE_HOME, :verbose => false
+    end
+
+    After do
+      ENV['HOME'] = @real_home
+    end
+    
+!SLIDE smaller
+# Implement new steps
+
+    @@@Ruby
+    Then /^my dotfiles should be checked out in 
+          "([^"]*)" in my home directory$/ do |dir|
       Then %(my dotfiles should be checked out in 
              "#{File.join(ENV['HOME'],dir)}")
     end
 
     Then /^my dotfiles should be symlinked in 
            my home directory$/ do
-      Then %(my dotfiles should be symlinked in "#{ENV['HOME']}")
+      Then %(my dotfiles should be symlinked in 
+             "#{ENV['HOME']}")
     end
-        
-!SLIDE smaller commandline incremental
+
+!SLIDE
+# Go
+
+_cd 6; rake features_
+
+!SLIDE smaller commandline 
 
     $ rake features
-    fileutils.rb:1416:in `path': can't convert nil into String (TypeError)
-      from bin/fullstop:9:in `main'
-      from bin/fullstop:33:in `<main>'
+    (in /Users/davec/Projects/tdd_talk/fullstop/6)
+    Feature: Install my dotfiles
+      As an organized developer who has his dotfiles on github
+      I want to be able to set up a new user account easily
+
+      Scenario: Symlink my dotfiles to an arbitrary directory
+        Given an empty directory "/tmp/dotfiles"
+        And I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles`
+        Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"
+        And my dotfiles should be symlinked in "/tmp/dotfiles"
+
+      Scenario: It should install into my home directory by default
+        Given I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles`
+          Exit status was 1 but expected it to be 0. Output:
+          
+          /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `path': can't convert nil into String (TypeError)
+            from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `block in fu_list'
+            from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `map'
+            from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1416:in `fu_list'
+            from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:197:in `mkdir_p'
+            from /Users/davec/Projects/tdd_talk/fullstop/6/bin/fullstop:9:in `main'
+            from /Users/davec/Projects/tdd_talk/fullstop/6/bin/fullstop:36:in `<main>'
+          
+           (RSpec::Expectations::ExpectationNotMetError)
+          features/fullstop.feature:14:in `When I successfully run `fullstop /Users/davec/Projects/testdotfiles`'
+        Then my dotfiles should be checked out in "dotfiles" in my home directory
+        And my dotfiles should be symlinked in my home directory
+
+    Failing Scenarios:
+    cucumber features/fullstop.feature:12
+
+    2 scenarios (1 failed, 1 passed)
+    9 steps (1 failed, 2 skipped, 6 passed)
+    0m0.259s
+    rake aborted!
+    Cucumber failed
 
 
 !SLIDE smaller
@@ -545,130 +550,68 @@ _cd 3 ; rake features_
 
     @@@Ruby
     def main(repo,checkout_dir)
-      checkout_dir = ENV['HOME'] unless checkout_dir ###
+
       mkdir_p checkout_dir
       chdir checkout_dir
-      `git clone #{repo} dotfiles`
 
-      dotfiles(File.join(checkout_dir,'dotfiles')) do |file|
-        ln_s file,'.'
-      end
+      %x[git clone #{repo} dotfiles]
+
+      dotfiles_in(checkout_dir) { |file| ln file,'.' }
     end
 
-!SLIDE commandline incremental   
-# Oh yeah
+!SLIDE smaller
+# Fix
+
+    @@@Ruby
+    def main(repo,checkout_dir)
+      checkout_dir = ENV['HOME'] if checkout_dir.nil?
+      mkdir_p checkout_dir
+      chdir checkout_dir
+
+      %x[git clone #{repo} dotfiles]
+
+      dotfiles_in(checkout_dir) { |file| ln file,'.' }
+    end
+
+    
+    
+
+!SLIDE 
+# Look at all that green!
+
+!SLIDE  commandline smaller
+# Look at all that green!
+
     $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/2_edge_cases)
-    mkdir -p /tmp/fakehome
-    .....mkdir -p /tmp/fakehome
-    ....
+    (in /Users/davec/Projects/tdd_talk/fullstop/7)
+    Feature: Install my dotfiles
+      As an organized developer who has his dotfiles on github
+      I want to be able to set up a new user account easily
+
+      Scenario: Symlink my dotfiles to an arbitrary directory
+        Given an empty directory "/tmp/dotfiles"
+        And I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles`
+        Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"
+        And my dotfiles should be symlinked in "/tmp/dotfiles"
+
+      Scenario: It should install into my home directory by default
+        Given I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles`
+        Then my dotfiles should be checked out in "dotfiles" in my home directory
+        And my dotfiles should be symlinked in my home directory
 
     2 scenarios (2 passed)
     9 steps (9 passed)
-    0m0.660s
+    0m0.260s
+
 
 !SLIDE bullets incremental
 # Refactor?
 * Not this time
 
-!SLIDE commandline
-# The UI sucks
-
-    $ fullstop --help
-    Usage: fullstop [options]
-    
 !SLIDE bullets incremental
-# The UI sucks
-* There are (currently) no options
-* There are two (undocumented) arguments
-
-!SLIDE small
-# New scenario
-
-    @@@Cucumber
-    Scenario: Our UI is decent
-      When I run `fullstop --help`
-      Then there should be a banner
-      And the banner should not include options
-      And the banner should document that the arguments 
-        are "repo [checkout_dir]"
-
-!SLIDE small
-# Implement tests
-
-    @@@Ruby
-    Then /^there should be a banner$/ do
-      Then %(the output should contain "Usage: fullstop")
-    end
-
-    Then /^the banner should not include options$/ do
-      Then %(the output should not contain "[options]")
-    end
-
-    Then /^the banner should document that the 
-           arguments are "([^"]*)"$/ do |args|
-      Then %(the output should contain "#{args}")
-    end
-
-!SLIDE small commandline incremental
-    $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/3_fix_ui)
-    mkdir -p /tmp/fakehome
-    ..F-
-
-    (::) failed steps (::)
-
-    expected "Usage: fullstop [options]\n" not to include "[options]"
-    Diff:
-    @@ -1,2 +1,2 @@
-    -[options]
-    +Usage: fullstop [options]
-     (RSpec::Expectations::ExpectationNotMetError)
-    features/fullstop.feature:21:in `And the banner should not include options'
-
-    Failing Scenarios:
-    cucumber features/fullstop.feature:18 # Scenario: Our UI is decent
-
-    1 scenario (1 failed)
-    4 steps (1 failed, 1 skipped, 2 passed)
-    0m0.122s
-    rake aborted!
-    Cucumber failed
-
-!SLIDE small
-# Fix
-
-    @@@Ruby
-    option_parser = OptionParser.new do |opts|
-      executable_name = File.basename(__FILE__)
-      opts.banner = 
-        "Usage: #{executable_name} repo [checkout_dir]"
-    end
-
-!SLIDE commandline incremental
-# YES
-    $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/3_fix_ui)
-    mkdir -p /tmp/fakehome
-    ....
-
-    1 scenario (1 passed)
-    4 steps (4 passed)
-    0m0.125s
-    $ fullstop --help
-    Usage: fullstop repo [checkout_dir]
-
-
-!SLIDE bullets incremental
-# Now what
-* Check for repo on command line
-* Add better help (e.g. what is `checkout_dir`'s default)
-* New feature to control where dotfiles are checked out
-* These are exercises for the viewer
-
-!SLIDE bullets incremental
-# What about...
-* If github is down?
-* If `ln` fails?
-* If any `mkdir` fails?
-
+# So, we can test drive new features
+## But what about:
+* the UI? (it currently sucks)
+* our complete lack of error handling?
