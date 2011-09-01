@@ -15,6 +15,7 @@
 * `scp files.tgz dev.example.com/var/deploy`
 * `~/.my_app.rc`
 * `rm`
+* `--help`
 
 !SLIDE
 # CLI apps tend to be implemented on production

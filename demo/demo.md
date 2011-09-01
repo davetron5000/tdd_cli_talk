@@ -1,3 +1,6 @@
+!SLIDE subsection
+# Demo
+
 !SLIDE  bullets incremental
 # Demo
 * Maintain our "dotfiles"
