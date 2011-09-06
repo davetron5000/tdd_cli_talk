@@ -76,7 +76,7 @@
 
     @@@ Cucumber
     Feature: Install my dotfiles
-      As an organized developer who has his dotfiles on github
+      As an organized developer who has his dotfiles in a git repo
       I want to be able to set up a new user account easily
 
       Scenario: Symlink my dotfiles
@@ -443,6 +443,31 @@ _cd 4; rake features_
 
     main(repo,checkout_dir)
 
+!SLIDE
+# Re-run tests
+
+_cd 5; rake features_
+
+!SLIDE commandline small
+
+    $ rake features
+    (in /Users/davec/Projects/tdd_talk/fullstop/5)
+    Feature: Install my dotfiles
+      As an organized developer who has his dotfiles on github
+      I want to be able to set up a new user account easily
+
+      Scenario: Symlink my dotfiles to an arbitrary directory
+        Given an empty directory "/tmp/dotfiles"
+        And I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles`
+        Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"
+        And my dotfiles should be symlinked in "/tmp/dotfiles"
+
+    1 scenario (1 passed)
+    5 steps (5 passed)
+    0m0.153s
+
+ 
 !SLIDE
 # We still want `~` to be default
 
