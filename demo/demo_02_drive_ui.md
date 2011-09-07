@@ -46,6 +46,30 @@
       Then %(the output should not contain "[options]")
     end
 
+!SLIDE smaller
+# Checking for arguments
+
+    @@@Ruby
+    Then /^the banner should document the arguments as:$/ do |table|
+      argument_string = table.raw.map { |row|
+        option = row[0]
+        option = "[#{row[0]}]" unless row[1] == 'required'
+        option
+      }.join(' ')
+      Then %(the output should contain "#{argument_string}")
+    end
+
+!SLIDE smaller
+# Checking for summary
+
+    @@@Ruby
+    Then /^there should be a one\-line summary of what the app does$/ do
+      output_lines = all_output.split(/\n/)
+      output_lines.should have_at_least(3).items
+      # [0] is our usage, which we've checked for
+      output_lines[1].should match(/^\s*$/)
+      output_lines[2].should match(/^\w+\s+\w+/)
+    end
 !SLIDE
 # Now, we have a failing test
    
@@ -95,47 +119,62 @@ _cd 08; rake features_
 _cd 09 ; rake features_
 
 
-!SLIDE smaller
-# Checking for arguments
-
-    @@@Ruby
-    Then /^the banner should document the arguments as:$/ do |table|
-      argument_string = table.raw.map { |row|
-        option = row[0]
-        option = "[#{row[0]}]" unless row[1] == 'required'
-        option
-      }.join(' ')
-      Then %(the output should contain "#{argument_string}")
-    end
-
-!SLIDE smaller
-# Checking for summary
-
-    @@@Ruby
-    Then /^there should be a one\-line summary of what the app does$/ do
-      output_lines = all_output.split(/\n/)
-      output_lines.should have_at_least(3).items
-      # [0] is our usage, which we've checked for
-      output_lines[1].should match(/^\s*$/)
-      output_lines[2].should match(/^\w+\s+\w+/)
-    end
-
 !SLIDE
 # And now
 
 !SLIDE commandline
 # And now
     $ rake features
-      Scenario: The UI should be good
-        Given the name of the app is "fullstop"
-        When I run `fullstop --help`
-        Then it should have a banner
-        And the banner should indicate that there are no options
-        And the banner should document the arguments as:
-          | dotfiles_repo | required |
-          | checkout_dir  | optional |
-        And there should be a one-line summary of what the app does
+    Scenario: The UI should be good
+      Given the name of the app is "fullstop"
+      When I run `fullstop --help`
+      Then it should have a banner
+      And the banner should indicate that there are no options
+      And the banner should document the arguments as:
+        | dotfiles_repo | required |
+        | checkout_dir  | optional |
+        expected "Usage: fullstop\n" to include "dotfiles_repo [checkout_dir]"
+        Diff:
+        @@ -1,2 +1,2 @@
+        -dotfiles_repo [checkout_dir]
+        +Usage: fullstop
+         (RSpec::Expectations::ExpectationNotMetError)
+        features/fullstop.feature:23:in `And the banner should document the arguments as:'
+      And there should be a one-line summary of what the app does
 
+    Failing Scenarios:
+    cucumber features/fullstop.feature:18
+
+!SLIDE  smaller
+# Fix
+
+    @@@Ruby
+    opts.banner = "Usage: #{executable_name}"
+    
+!SLIDE  smaller
+# Fix
+
+    @@@Ruby
+    opts.banner = "Usage: #{executable_name} \
+                   dotfiles_repo [checkout_dir]
+
+!SLIDE
+# Fixed?
+
+_cd 10 ; rake features_
+
+!SLIDE commandline
+
+    $ rake features
+    Scenario: The UI should be good
+    Given the name of the app is "fullstop"
+    When I run `fullstop --help`
+    Then it should have a banner
+    And the banner should indicate that there are no options
+    And the banner should document the arguments as:
+      | dotfiles_repo | required |
+      | checkout_dir  | optional |
+    And there should be a one-line summary of what the app does
 
 !SLIDE commandline
 
@@ -147,5 +186,4 @@ _cd 09 ; rake features_
 !SLIDE bullets incremental
 # Nice!
 * Happy path sure is happy
-* How do we test for unhappy paths?
 

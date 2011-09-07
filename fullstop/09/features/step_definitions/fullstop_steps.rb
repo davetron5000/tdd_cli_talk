@@ -42,10 +42,18 @@ Then /^the banner should indicate that there are no options$/ do
 end
 
 Then /^the banner should document the arguments as:$/ do |table|
-  # table is a Cucumber::Ast::Table
-  pending # express the regexp above with the code you wish you had
+  argument_string = table.raw.map { |row|
+    option = row[0]
+    option = "[#{row[0]}]" unless row[1] == 'required'
+    option
+  }.join(' ')
+  Then %(the output should contain "#{argument_string}")
 end
 
 Then /^there should be a one\-line summary of what the app does$/ do
-  pending # express the regexp above with the code you wish you had
+  output_lines = all_output.split(/\n/)
+  output_lines.should have_at_least(3).items
+  # [0] is our usage, which we've checked for
+  output_lines[1].should match(/^\s*$/)
+  output_lines[2].should match(/^\w+\s+\w+/)
 end

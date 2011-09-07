@@ -1,3 +1,6 @@
+!SLIDE subsection
+# Unhappy Path
+
 !SLIDE smaller
 
     @@@Ruby
@@ -38,6 +41,97 @@
 # Refactor
 
 !SLIDE smaller
+    @@@Ruby
+    #!/usr/bin/env ruby -w
+
+    $: << File.expand_path(File.dirname(File.realpath(__FILE__)) + 
+          '/../lib') 
+
+    require 'optparse'
+    require 'fileutils'
+
+        def main(repo,checkout_dir)
+          checkout_dir = ENV['HOME'] if checkout_dir.nil?
+          mkdir_p checkout_dir
+          chdir checkout_dir
+
+          %x[git clone #{repo} dotfiles]
+
+          dotfiles_in(checkout_dir) { |file| ln file,'.' }
+        end
+
+        def dotfiles_in(dir)
+          Dir["#{dir}/dotfiles/{*,.*}"].each do |file|
+            basename = File.basename(file)
+            if basename != '.' && basename != '..'
+              yield file
+            end
+          end
+        end
+
+    #
+
+!SLIDE smaller
+    @@@Ruby
+    require 'fileutils'
+
+
+
+    
+
+    module Fullstop
+      module CLI
+        include FileUtils
+        def main(repo,checkout_dir)
+          checkout_dir = ENV['HOME'] if checkout_dir.nil?
+          mkdir_p checkout_dir
+          chdir checkout_dir
+
+          %x[git clone #{repo} dotfiles]
+
+          dotfiles_in(checkout_dir) { |file| ln file,'.' }
+        end
+
+        def dotfiles_in(dir)
+          Dir["#{dir}/dotfiles/{*,.*}"].each do |file|
+            basename = File.basename(file)
+            if basename != '.' && basename != '..'
+              yield file
+            end
+          end
+        end
+      end
+    end
+
+
+!SLIDE smaller
+
+    @@@Ruby
+    #!/usr/bin/env ruby -w
+
+    $: << File.expand_path(File.dirname(File.realpath(__FILE__)) + 
+          '/../lib') 
+
+    require 'optparse'
+    
+
+    
+
+    option_parser = OptionParser.new do |opts|
+      executable_name = File.basename(__FILE__)
+      opts.banner = "Usage: #{executable_name} dotfiles_repo [checkout_dir]
+      
+    fullstop manages symlinking your dotfiles from a git repo"
+    end
+
+    option_parser.parse!
+
+    repo = ARGV[0]
+    checkout_dir = ARGV[1]
+
+    main(repo,checkout_dir)
+
+!SLIDE smaller
 
     @@@Ruby
     #!/usr/bin/env ruby -w
@@ -63,33 +157,6 @@
     checkout_dir = ARGV[1]
 
     main(repo,checkout_dir)
-
-!SLIDE smaller
-    @@@Ruby
-    require 'fileutils'
-    module Fullstop
-      module CLI
-        include FileUtils
-        def main(repo,checkout_dir)
-          checkout_dir = ENV['HOME'] if checkout_dir.nil?
-          mkdir_p checkout_dir
-          chdir checkout_dir
-
-          %x[git clone #{repo} dotfiles]
-
-          dotfiles_in(checkout_dir) { |file| ln file,'.' }
-        end
-
-        def dotfiles_in(dir)
-          Dir["#{dir}/dotfiles/{*,.*}"].each do |file|
-            basename = File.basename(file)
-            if basename != '.' && basename != '..'
-              yield file
-            end
-          end
-        end
-      end
-    end
 
 !SLIDE
 # Did we break anything?
