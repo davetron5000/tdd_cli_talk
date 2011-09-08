@@ -30,7 +30,13 @@
 * We could still benefit from unit tests
 
 !SLIDE bullets incremental
-# Design will need to change
+# Benefits of unit tests
+* Less setup required
+* Faster TDD cycle
+* Encourages better design
+
+!SLIDE bullets incremental
+# Current design will need to change
 * How to test those system calls?
 * What do we do when one fails?
 
@@ -200,10 +206,140 @@ _cd 11 && rake features_
 
 !SLIDE bullets incremental
 # Still green; now what?
-* Abstract `FileUtils` calls?
-* Mock `FileUtils`?
-* Mock filesystem?
+* One step at a time
+* What if our `mkdir_p` fails?
+
+!SLIDE bullets incremental
+# `mkdir_p`
+* Throws Exceptions on failure
+* Those Exceptions are not documented
+
+!SLIDE bullets incremental
+# Mock filesystem?
+## `MockFS`
+* Requires rewrite
+* No affect on other code that uses `File`, etc.
+
+!SLIDE bullets incremental
+# Mock filesystem?
+## `FakeFS`
+* Not ever method supported
+* Requires our code to do `FileUtils.mkdir_p`
+
+!SLIDE bullets incremental
+# Set up our own FS in `/tmp` ?
+* Too much setup
+* OK for acceptance; not for unit tests
+
+!SLIDE bullets incremental
+# Mock code
+* We `include FileUtils`
+* we can mock/stub `mkdir_p`
+
+!SLIDE smaller
+
+    @@@Ruby
+    require 'minitest/autorun'
+    require 'fullstop'
+    require 'mocha'
+
+    class TestCLI < MiniTest::Unit::TestCase
+      class Tester
+        include Fullstop::CLI
+      end
+
+      def test_that_inability_to_make_checkout_dir_causes_exception
+        tester = Tester.new
+        repo = File.join(ENV['HOME'],'dotfiles.git')
+
+        tester.stubs(:mkdir_p).throws(RuntimeError)
+
+        ex = assert_raises RuntimeError do
+          tester.main(repo,nil)
+        end
+        assert_equal ("Problem creating directory #{ENV['HOME']}", 
+                      ex.message)
+      end
+    end
 
 !SLIDE
-# Let's mock the filesystem
+# Test
 
+_cd 12; rake test_
+
+!SLIDE commandline smaller
+# Test
+
+    $ rake test
+    (in /Users/davec/Projects/tdd_talk/fullstop/12)
+    Loaded suite /Users/davec/.rvm/gems/ruby-1.9.2-p290@global/gems/rake-0.8.7/lib/rake/rake_test_loader
+    Started
+    F
+    Finished in 0.001835 seconds.
+
+      1) Failure:
+    test_that_inability_to_make_checkout_dir_causes_exception(TestCLI) [test/tc_cli.rb:23]:
+    [RuntimeError] exception expected, not
+    Class: <ArgumentError>
+    Message: <"uncaught throw RuntimeError">
+    ---Backtrace---
+    /Users/davec/.rvm/gems/ruby-1.9.2-p290@tdd-cli/gems/mocha-0.10.0/lib/mocha/thrower.rb:10:in `throw'
+    /Users/davec/.rvm/gems/ruby-1.9.2-p290@tdd-cli/gems/mocha-0.10.0/lib/mocha/thrower.rb:10:in `evaluate'
+    /Users/davec/.rvm/gems/ruby-1.9.2-p290@tdd-cli/gems/mocha-0.10.0/lib/mocha/return_values.rb:20:in `next'
+    /Users/davec/.rvm/gems/ruby-1.9.2-p290@tdd-cli/gems/mocha-0.10.0/lib/mocha/expectation.rb:472:in `invoke'
+    /Users/davec/.rvm/gems/ruby-1.9.2-p290@tdd-cli/gems/mocha-0.10.0/lib/mocha/mock.rb:157:in `method_missing'
+    /Users/davec/.rvm/gems/ruby-1.9.2-p290@tdd-cli/gems/mocha-0.10.0/lib/mocha/class_method.rb:46:in `mkdir_p'
+    /Users/davec/Projects/tdd_talk/fullstop/12/lib/fullstop/cli.rb:8:in `main'
+    test/tc_cli.rb:24:in `block in test_that_inability_to_make_checkout_dir_causes_exception'
+    test/tc_cli.rb:32:in `block in assert_raises_with_message'
+    ---------------
+
+    1 tests, 1 assertions, 1 failures, 0 errors, 0 skips
+
+    Test run options: --seed 54132
+    rake aborted!
+    Command failed with status (1): [/Users/davec/.rvm/rubies/ruby-1.9.2-p290/b...]
+
+    (See full trace by running task with --trace)
+
+!SLIDE small
+# Fix
+
+    @@@Ruby
+    def main(repo,checkout_dir)
+      checkout_dir = ENV['HOME'] if checkout_dir.nil?
+
+      
+      mkdir_p checkout_dir
+      
+      
+      
+      chdir checkout_dir
+
+      %x[git clone #{repo} dotfiles]
+
+      dotfiles_in(checkout_dir) do |file| 
+        ln file,'.'
+      end
+    end
+
+!SLIDE small
+# Fix
+
+    @@@Ruby
+    def main(repo,checkout_dir)
+      checkout_dir = ENV['HOME'] if checkout_dir.nil?
+
+      begin
+        mkdir_p checkout_dir
+      rescue
+        raise "Problem creating directory #{checkout_dir}"
+      end
+      chdir checkout_dir
+
+      %x[git clone #{repo} dotfiles]
+
+      dotfiles_in(checkout_dir) do |file| 
+        ln file,'.'
+      end
+    end
