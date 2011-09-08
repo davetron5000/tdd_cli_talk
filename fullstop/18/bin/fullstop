@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby -w
+
+$: << File.expand_path(File.dirname(File.realpath(__FILE__)) + '/../lib') 
+
+require 'optparse'
+require 'fullstop'
+
+include Fullstop::CLI
+
+option_parser = OptionParser.new do |opts|
+  executable_name = File.basename(__FILE__)
+  opts.banner = "Usage: #{executable_name} dotfiles_repo [checkout_dir]
+  
+fullstop manages symlinking your dotfiles from a git repo"
+end
+
+option_parser.parse!
+
+repo = ARGV[0]
+checkout_dir = ARGV[1]
+
+begin
+  main(repo,checkout_dir)
+rescue Exception => ex
+  STDERR.puts "error: #{ex.message}"
+  exit 1
+end
+

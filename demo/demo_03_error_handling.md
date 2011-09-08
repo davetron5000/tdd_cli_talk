@@ -343,3 +343,268 @@ _cd 12; rake test_
         ln file,'.'
       end
     end
+
+!SLIDE smaller
+# Fast-Forward
+_cd 15; rake test_
+    @@@Ruby
+    def main(repo,checkout_dir)
+      checkout_dir = ENV['HOME'] if checkout_dir.nil?
+
+      begin
+        mkdir_p checkout_dir
+      rescue
+        raise "Problem creating directory #{checkout_dir}"
+      end
+      begin
+        chdir checkout_dir
+      rescue
+        raise "Problem changing to directory #{checkout_dir}"
+      end
+
+      unless system("git clone #{repo} dotfiles")
+        raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
+      end
+
+      dotfiles_in(checkout_dir) do |file| 
+        begin
+          ln file,'.'
+        rescue
+          raise "Problem symlinking #{file} into #{checkout_dir}"
+        end
+      end
+    end
+
+!SLIDE 
+# Refactor
+
+    @@@Ruby
+    def sh(command=nil)
+      if command.nil?
+        begin
+          yield
+          return true
+        rescue
+          return false
+        end
+      else
+        return system(command)
+      end
+    end
+
+!SLIDE  smaller
+#Refactor
+
+    @@@Ruby
+    sh { mkdir_p checkout_dir } or
+      raise "Problem creating directory #{checkout_dir}"
+    sh { chdir checkout_dir } or
+      raise "Problem changing to directory #{checkout_dir}"
+    sh("git clone #{repo} dotfiles") or
+      raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
+
+    dotfiles_in(checkout_dir) do |file| 
+      sh { ln file,'.' } or
+        raise "Problem symlinking #{file} into #{checkout_dir}"
+    end
+
+!SLIDE
+# Still works!
+_cd 15 ; rake test_
+
+!SLIDE
+# Or...
+
+    @@@Ruby
+    def method_missing(sym,*args)
+      if FileUtils.respond_to? sym
+        error_message = "Problem #{args.pop}"
+        begin
+          FileUtils.send(sym,*args)
+        rescue
+          raise error_message
+        end
+      else
+        super(sym,*args)
+      end
+    end
+
+
+!SLIDE smaller
+# Or...
+
+    @@@Ruby
+    #include FileUtils
+    def main(repo,checkout_dir)
+      checkout_dir = ENV['HOME'] if checkout_dir.nil?
+
+      mkdir_p checkout_dir, "creating directory #{checkout_dir}"
+      chdir checkout_dir, "changing to directory #{checkout_dir}"
+
+      sh("git clone #{repo} dotfiles") or
+        raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
+
+      dotfiles_in(checkout_dir) do |file| 
+        ln file,'.', "symlinking #{file} into #{checkout_dir}"
+      end
+    end
+
+!SLIDE small
+# Debatable Refactor
+
+    @@@Ruby
+    def setup
+      @tester = Tester.new
+      #@tester.stubs(:mkdir_p)
+      #@tester.stubs(:chdir)
+      #@tester.stubs(:ln)
+      FileUtils.stubs(:mkdir_p)
+      FileUtils.stubs(:chdir)
+      FileUtils.stubs(:ln)
+      @tester.stubs(:system).returns(true)
+      @tester.stubs(:dotfiles_in).yields('.bashrc')
+      @home = ENV['HOME']
+      @repo = File.join(@home,'dotfiles.git')
+    end
+
+!SLIDE bullets incremental
+# Now, we have a problem
+* Nice error messages
+* Poor user still gets a backtrace
+* Refactor
+
+!SLIDE commandline incremental
+# What we want
+
+    $ fullstop /some/unknown/repo
+    error: Problem checking out /some/unknown/repo
+    $ echo $?
+    1 # => or some other nonzero value
+
+!SLIDE bullets incremental
+# Getting there
+* Only coverage of `bin/fullstop` is cuke tests
+* Need a way to force a failure
+
+!SLIDE smaller
+# New feature
+
+    @@@Cucumber
+    Scenario: Handle failures gracefully
+      Given an empty directory "/tmp/dotfiles"
+      When I run `fullstop /tmp/dotfiles`
+      Then the exit status should not be 0
+      And the output should contain \
+          "Problem checking out /tmp/dotfiles"
+      But the output should not contain a backtrace
+
+!SLIDE smaller
+# Check for backtrace
+## (cheesily)
+
+    @@@Ruby
+    Then /^the output should not contain a backtrace$/ do
+      Then %(the output should not contain "`<main>'")
+    end
+
+!SLIDE
+# Watch it fail
+_cd 17; rake features_
+
+!SLIDE commandline smaller
+# Watch it fail
+
+    $ rake features
+    Scenario: Handle failures gracefully
+        Given an empty directory "/tmp/dotfiles"
+        When I run `fullstop /tmp/dotfiles`
+        Then the exit status should not be 0
+        And the output should not contain a backtrace
+          expected "fatal: repository '/tmp/dotfiles' does not exist\n/Users/davec/Projects/tdd_talk/fullstop/17/lib/fullstop/cli.rb:14:in `main': Problem checking out /tmp/dotfiles into /tmp/fakehome/dotfiles (RuntimeError)\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/17/bin/fullstop:22:in `<main>'\n" not to include "`<main>'"
+          Diff:
+          @@ -1,2 +1,4 @@
+          -`<main>'
+          +fatal: repository '/tmp/dotfiles' does not exist
+          +/Users/davec/Projects/tdd_talk/fullstop/17/lib/fullstop/cli.rb:14:in `main': Problem checking out /tmp/dotfiles into /tmp/fakehome/dotfiles (RuntimeError)
+          +	from /Users/davec/Projects/tdd_talk/fullstop/17/bin/fullstop:22:in `<main>'
+           (RSpec::Expectations::ExpectationNotMetError)
+          features/fullstop.feature:32:in `And the output should not contain a backtrace'
+        But the output should contain "Problem checking out /tmp/dotfiles"
+
+    Failing Scenarios:
+    cucumber features/fullstop.feature:28
+
+    4 scenarios (1 failed, 3 passed)
+    20 steps (1 failed, 1 skipped, 18 passed)
+    0m0.516s
+    rake aborted!
+    Cucumber failed
+
+
+!SLIDE
+# Fix
+
+    @@@Ruby
+    
+      main(repo,checkout_dir)
+    
+    
+    
+    #
+
+!SLIDE
+# Fix
+
+    @@@Ruby
+    begin
+      main(repo,checkout_dir)
+    rescue Exception => ex
+      STDERR.puts "error: #{ex.message}"
+      exit 1
+    end
+
+!SLIDE
+# Still green?
+
+!SLIDE commandline smaller
+# Still green
+    $ rake features
+    (in /Users/davec/Projects/tdd_talk/fullstop/18)
+    Feature: Install my dotfiles
+      As an organized developer who has his dotfiles on github
+      I want to be able to set up a new user account easily
+
+      Scenario: Symlink my dotfiles to an arbitrary directory
+        Given an empty directory "/tmp/dotfiles"
+        And I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles`
+        Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"
+        And my dotfiles should be symlinked in "/tmp/dotfiles"
+
+      Scenario: It should install into my home directory by default
+        Given I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
+        When I successfully run `fullstop /Users/davec/Projects/testdotfiles`
+        Then my dotfiles should be checked out in "dotfiles" in my home directory
+        And my dotfiles should be symlinked in my home directory
+
+      Scenario: The UI should be good
+        Given the name of the app is "fullstop"
+        When I run `fullstop --help`
+        Then it should have a banner
+        And the banner should indicate that there are no options
+        And the banner should document the arguments as:
+          | dotfiles_repo | required |
+          | checkout_dir  | optional |
+        And there should be a one-line summary of what the app does
+
+      Scenario: Handle failures gracefully
+        Given an empty directory "/tmp/dotfiles"
+        When I run `fullstop /tmp/dotfiles`
+        Then the exit status should not be 0
+        And the output should not contain a backtrace
+        But the output should contain "Problem checking out /tmp/dotfiles"
+
+    4 scenarios (4 passed)
+    20 steps (20 passed)
+    0m0.520s
+
