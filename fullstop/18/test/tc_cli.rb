@@ -10,9 +10,9 @@ class TestCLI < MiniTest::Unit::TestCase
 
   def setup
     @tester = Tester.new
-    @tester.stubs(:mkdir_p)
-    @tester.stubs(:chdir)
-    @tester.stubs(:ln)
+    FileUtils.stubs(:mkdir_p)
+    FileUtils.stubs(:chdir)
+    FileUtils.stubs(:ln)
     @tester.stubs(:system).returns(true)
     @tester.stubs(:dotfiles_in).yields('.bashrc')
     @home = ENV['HOME']
@@ -20,7 +20,7 @@ class TestCLI < MiniTest::Unit::TestCase
   end
 
   def test_that_inability_to_make_checkout_dir_causes_exception
-    @tester.stubs(:mkdir_p).throws(RuntimeError)
+    FileUtils.stubs(:mkdir_p).throws(RuntimeError)
     ex = assert_raises RuntimeError do
       @tester.main(@repo,nil)
     end
@@ -28,7 +28,7 @@ class TestCLI < MiniTest::Unit::TestCase
   end
 
   def test_that_inability_to_cd_to_checkout_dir_causes_exception
-    @tester.stubs(:chdir).throws(RuntimeError)
+    FileUtils.stubs(:chdir).throws(RuntimeError)
     ex = assert_raises RuntimeError do
       @tester.main(@repo,nil)
     end
@@ -44,7 +44,7 @@ class TestCLI < MiniTest::Unit::TestCase
   end
 
   def test_that_inability_to_symlink_causes_exception
-    @tester.stubs(:ln).throws(RuntimeError)
+    FileUtils.stubs(:ln).throws(RuntimeError)
     ex = assert_raises RuntimeError do
       @tester.main(@repo,nil)
     end

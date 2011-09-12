@@ -403,54 +403,17 @@ _cd 12; rake test_
     end
 _cd 15; rake test_
 
-!SLIDE 
+!SLIDE
 # Refactor
-
-    @@@Ruby
-    def sh(command=nil)
-      if command.nil?
-        begin
-          yield
-          return true
-        rescue
-          return false
-        end
-      else
-        return system(command)
-      end
-    end
-
-!SLIDE  smaller
-#Refactor
-
-    @@@Ruby
-    sh { mkdir_p checkout_dir } or
-      raise "Problem creating directory #{checkout_dir}"
-    sh { chdir checkout_dir } or
-      raise "Problem changing to directory #{checkout_dir}"
-    sh("git clone #{repo} dotfiles") or
-      raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
-
-    dotfiles_in(checkout_dir) do |file| 
-      sh { ln file,'.' } or
-        raise "Problem symlinking #{file} into #{checkout_dir}"
-    end
-
-!SLIDE
-# Still works!
-_cd 15 ; rake test_
-
-!SLIDE
-# Or...
 
     @@@Ruby
     def method_missing(sym,*args)
       if FileUtils.respond_to? sym
-        error_message = "Problem #{args.pop}"
         begin
           FileUtils.send(sym,*args)
+          true
         rescue
-          raise error_message
+          false
         end
       else
         super(sym,*args)
@@ -459,26 +422,32 @@ _cd 15 ; rake test_
 
 
 !SLIDE smaller
-# Or...
+# Refactor
 
     @@@Ruby
     #include FileUtils
     def main(repo,checkout_dir)
       checkout_dir = ENV['HOME'] if checkout_dir.nil?
 
-      mkdir_p checkout_dir, "creating directory #{checkout_dir}"
-      chdir checkout_dir, "changing to directory #{checkout_dir}"
+      mkdir_p checkout_dir or 
+        raise "Problem creating directory #{checkout_dir}"
+      chdir checkout_dir or 
+        raise "Problem changing to directory #{checkout_dir}"
 
       sh("git clone #{repo} dotfiles") or
         raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
 
       dotfiles_in(checkout_dir) do |file| 
-        ln file,'.', "symlinking #{file} into #{checkout_dir}"
+        ln file,'.' or 
+          raise "Problem symlinking #{file} into #{checkout_dir}"
       end
     end
 
+_ cd 16; rake features_
+
 !SLIDE small
 # Debatable Refactor
+## Don't change tests to make a refactor pass
 
     @@@Ruby
     def setup
@@ -496,7 +465,15 @@ _cd 15 ; rake test_
     end
 
 !SLIDE bullets incremental
-# Now, we have a problem
+# Solution
+* "Refactor" to use `FileUtils.mkdir_p` style
+* Change tests to mock `FileUtils`
+* Tests should still pass
+* Refactor out the `FileUtils.` replacing with `method_missing`
+
+!SLIDE bullets incremental
+# Assuming we do all that
+## We have a new problem
 * Nice error messages
 * Poor user still gets a backtrace
 * Refactor
@@ -512,7 +489,6 @@ _cd 15 ; rake test_
 !SLIDE bullets incremental
 # Getting there
 * Only coverage of `bin/fullstop` is cuke tests
-* Need a way to force a failure
 
 !SLIDE smaller
 # New feature
