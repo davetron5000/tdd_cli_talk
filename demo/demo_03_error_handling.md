@@ -434,7 +434,7 @@ _cd 15; rake test_
       chdir checkout_dir or 
         raise "Problem changing to directory #{checkout_dir}"
 
-      sh("git clone #{repo} dotfiles") or
+      system("git clone #{repo} dotfiles") or
         raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
 
       dotfiles_in(checkout_dir) do |file| 
@@ -445,35 +445,8 @@ _cd 15; rake test_
 
 _ cd 16; rake features_
 
-!SLIDE small
-# Debatable Refactor
-## Don't change tests to make a refactor pass
-
-    @@@Ruby
-    def setup
-      @tester = Tester.new
-      #@tester.stubs(:mkdir_p)
-      #@tester.stubs(:chdir)
-      #@tester.stubs(:ln)
-      FileUtils.stubs(:mkdir_p)
-      FileUtils.stubs(:chdir)
-      FileUtils.stubs(:ln)
-      @tester.stubs(:system).returns(true)
-      @tester.stubs(:dotfiles_in).yields('.bashrc')
-      @home = ENV['HOME']
-      @repo = File.join(@home,'dotfiles.git')
-    end
-
 !SLIDE bullets incremental
-# Solution
-* "Refactor" to use `FileUtils.mkdir_p` style
-* Change tests to mock `FileUtils`
-* Tests should still pass
-* Refactor out the `FileUtils.` replacing with `method_missing`
-
-!SLIDE bullets incremental
-# Assuming we do all that
-## We have a new problem
+# We have a new problem
 * Nice error messages
 * Poor user still gets a backtrace
 * Refactor

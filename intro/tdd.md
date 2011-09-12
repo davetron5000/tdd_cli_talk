@@ -20,8 +20,3 @@
 !SLIDE
 # CLI apps tend to be implemented on production
 
-!SLIDE bullets incremental
-# Questions
-* How do we deal with this?
-* What tools can help?
-* How do we get started?

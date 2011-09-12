@@ -1,5 +1,11 @@
-!SLIDE subsection
+!SLIDE subsection 
 # The UI sucks
+
+!SLIDE commandline incremental
+# The UI sucks
+
+    $ fullstop --help
+    Usage: fullstop [options]
 
 !SLIDE bullets incremental
 # The UI sucks
@@ -9,8 +15,6 @@
 
 !SLIDE commandline incremental
 
-    $ fullstop --help
-    Usage: fullstop [options]
 
 !SLIDE smaller
 
