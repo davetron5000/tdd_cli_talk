@@ -75,7 +75,7 @@
    
 _cd 08; rake features_
 
-!SLIDE commandline
+!SLIDE commandline smaller
 # Now, we have a failing test
     $ rake features
     (in /Users/davec/Projects/tdd_talk/fullstop/08)
@@ -122,7 +122,7 @@ _cd 09 ; rake features_
 !SLIDE
 # And now
 
-!SLIDE commandline
+!SLIDE commandline smaller
 # And now
     $ rake features
     Scenario: The UI should be good
@@ -156,7 +156,7 @@ _cd 09 ; rake features_
 
     @@@Ruby
     opts.banner = "Usage: #{executable_name} \
-                   dotfiles_repo [checkout_dir]
+                   dotfiles_repo [checkout_dir]"
 
 !SLIDE
 # Fixed?

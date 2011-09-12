@@ -48,13 +48,14 @@
 
 !SLIDE smaller
     @@@Ruby
-    #!/usr/bin/env ruby -w
-
-    $: << File.expand_path(File.dirname(File.realpath(__FILE__)) + 
-          '/../lib') 
-
-    require 'optparse'
     require 'fileutils'
+
+
+    
+    
+
+    
+    
 
         def main(repo,checkout_dir)
           checkout_dir = ENV['HOME'] if checkout_dir.nil?
@@ -223,7 +224,7 @@ _cd 11 && rake features_
 !SLIDE bullets incremental
 # Mock filesystem?
 ## `FakeFS`
-* Not ever method supported
+* Not every method supported
 * Requires our code to do `FileUtils.mkdir_p`
 
 !SLIDE bullets incremental
@@ -237,6 +238,34 @@ _cd 11 && rake features_
 * we can mock/stub `mkdir_p`
 
 !SLIDE smaller
+# Setup
+
+    @@@Ruby
+    require 'minitest/autorun'
+    require 'fullstop'
+    require 'mocha'
+
+    class TestCLI < MiniTest::Unit::TestCase
+      class Tester
+        include Fullstop::CLI
+      end
+
+      def test_that_inability_to_make_checkout_dir_causes_exception
+        tester = Tester.new
+        repo = File.join(ENV['HOME'],'dotfiles.git')
+
+        tester.stubs(:mkdir_p).throws(RuntimeError)
+
+
+
+
+
+
+      end
+    end
+
+!SLIDE smaller
+# Assertions
 
     @@@Ruby
     require 'minitest/autorun'
@@ -346,11 +375,9 @@ _cd 12; rake test_
 
 !SLIDE smaller
 # Fast-Forward
-_cd 15; rake test_
     @@@Ruby
     def main(repo,checkout_dir)
       checkout_dir = ENV['HOME'] if checkout_dir.nil?
-
       begin
         mkdir_p checkout_dir
       rescue
@@ -374,6 +401,7 @@ _cd 15; rake test_
         end
       end
     end
+_cd 15; rake test_
 
 !SLIDE 
 # Refactor
