@@ -29,17 +29,6 @@
 * Treat cuke tests as acceptance tests
 * We could still benefit from unit tests
 
-!SLIDE bullets incremental
-# Benefits of unit tests
-* Less setup required
-* Faster TDD cycle
-* Encourages better design
-
-!SLIDE bullets incremental
-# Current design will need to change
-* How to test those system calls?
-* What do we do when one fails?
-
 !SLIDE 
 # First, let's get a testable unit
 
@@ -207,7 +196,6 @@ _cd 11 && rake features_
 
 !SLIDE bullets incremental
 # Still green; now what?
-* One step at a time
 * What if our `mkdir_p` fails?
 
 !SLIDE bullets incremental
@@ -372,9 +360,11 @@ _cd 12; rake test_
         ln file,'.'
       end
     end
+_cd 13; rake test_
 
 !SLIDE smaller
 # Fast-Forward
+_cd 15; rake test_
     @@@Ruby
     def main(repo,checkout_dir)
       checkout_dir = ENV['HOME'] if checkout_dir.nil?
@@ -401,7 +391,6 @@ _cd 12; rake test_
         end
       end
     end
-_cd 15; rake test_
 
 !SLIDE
 # Refactor
@@ -450,6 +439,8 @@ _ cd 16; rake features_
 * Nice error messages
 * Poor user still gets a backtrace
 * Refactor
+
+_5:00_
 
 !SLIDE commandline incremental
 # What we want

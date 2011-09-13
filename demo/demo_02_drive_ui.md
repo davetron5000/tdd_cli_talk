@@ -7,15 +7,6 @@
     $ fullstop --help
     Usage: fullstop [options]
 
-!SLIDE bullets incremental
-# The UI sucks
-* There are (currently) no options
-* There are two (undocumented) arguments
-* No info about what this thing does
-
-!SLIDE commandline incremental
-
-
 !SLIDE smaller
 
     @@@Cucumber
@@ -115,52 +106,8 @@ _cd 08; rake features_
 !SLIDE small
 
     @@@Ruby
-    opts.banner = "Usage: #{executable_name}"
-
-!SLIDE
-# not quite done
-
-_cd 09 ; rake features_
-
-
-!SLIDE
-# And now
-
-!SLIDE commandline smaller
-# And now
-    $ rake features
-    Scenario: The UI should be good
-      Given the name of the app is "fullstop"
-      When I run `fullstop --help`
-      Then it should have a banner
-      And the banner should indicate that there are no options
-      And the banner should document the arguments as:
-        | dotfiles_repo | required |
-        | checkout_dir  | optional |
-        expected "Usage: fullstop\n" to include "dotfiles_repo [checkout_dir]"
-        Diff:
-        @@ -1,2 +1,2 @@
-        -dotfiles_repo [checkout_dir]
-        +Usage: fullstop
-         (RSpec::Expectations::ExpectationNotMetError)
-        features/fullstop.feature:23:in `And the banner should document the arguments as:'
-      And there should be a one-line summary of what the app does
-
-    Failing Scenarios:
-    cucumber features/fullstop.feature:18
-
-!SLIDE  smaller
-# Fix
-
-    @@@Ruby
-    opts.banner = "Usage: #{executable_name}"
-    
-!SLIDE  smaller
-# Fix
-
-    @@@Ruby
-    opts.banner = "Usage: #{executable_name} \
-                   dotfiles_repo [checkout_dir]"
+    opts.banner = "Usage: #{executable_name}\n\n" + 
+      "Manages your dotfiles from a git repo"
 
 !SLIDE
 # Fixed?
