@@ -1,6 +1,6 @@
 *.sw?
 .bundle
-post-commit.feature
 notes.md
 tmp
 results.html
+old
