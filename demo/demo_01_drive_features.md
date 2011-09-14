@@ -29,7 +29,12 @@
     Using bundler (1.0.15) 
     Your bundle is complete! Use `bundle show [gemname]` to see where a bundled gem is installed.
 
-!SLIDE commandline incremental
+!SLIDE commandline 
+# Bootstrap
+
+    $ bin/fullstop --help
+
+!SLIDE commandline 
 # Bootstrap
 
     $ bin/fullstop --help
@@ -360,7 +365,7 @@ _cd 4; rake features_
 * I want the main logic first
 * Hide the nasty `Dir[]` expression
 
-!SLIDE 
+!SLIDE  small
 # New `bin/fullstop`
 ## The top 
 
@@ -466,14 +471,13 @@ _cd 5; rake features_
     @@@Ruby
     Then /^my dotfiles should be checked out in 
           "([^"]*)" in my home directory$/ do |dir|
-      Then %(my dotfiles should be checked out in 
-             "#{File.join(ENV['HOME'],dir)}")
+      checkout_dir = File.join(ENV['HOME'],dir)
+      Then %(my dotfiles should be checked out in "#{checkout_dir}")
     end
 
     Then /^my dotfiles should be symlinked in 
            my home directory$/ do
-      Then %(my dotfiles should be symlinked in 
-             "#{ENV['HOME']}")
+      Then %(my dotfiles should be symlinked in "#{ENV['HOME']}")
     end
 
 !SLIDE small

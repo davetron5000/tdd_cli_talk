@@ -7,10 +7,5 @@
 !SLIDE 
 # Challenges for CLI
 
-!SLIDE  bullets incremental
+!SLIDE
 # CLI apps tend to be implemented on production
-* `scp files.tgz dev.example.com/var/deploy`
-* `~/.my_app.rc`
-* `rm`
-* Also: `--help`
-

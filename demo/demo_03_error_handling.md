@@ -426,7 +426,7 @@ _ cd 16; rake features_
 # We have a new problem
 * Nice error messages
 * Poor user still gets a backtrace
-* Refactor
+
 
 _5:00_
 
@@ -450,7 +450,7 @@ _5:00_
       Given an empty directory "/tmp/dotfiles"
       When I run `fullstop /tmp/dotfiles`
       Then the exit status should not be 0
-      And the output should contain \
+      And the stderr should contain \
           "Problem checking out /tmp/dotfiles"
       But the output should not contain a backtrace
 
@@ -475,7 +475,7 @@ _cd 17; rake features_
         Given an empty directory "/tmp/dotfiles"
         When I run `fullstop /tmp/dotfiles`
         Then the exit status should not be 0
-        And the output should not contain a backtrace
+        And the stderr should not contain a backtrace
           expected "fatal: repository '/tmp/dotfiles' does not exist\n/Users/davec/Projects/tdd_talk/fullstop/17/lib/fullstop/cli.rb:14:in `main': Problem checking out /tmp/dotfiles into /tmp/fakehome/dotfiles (RuntimeError)\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/17/bin/fullstop:22:in `<main>'\n" not to include "`<main>'"
           Diff:
           @@ -1,2 +1,4 @@
@@ -557,7 +557,7 @@ _cd 17; rake features_
         Given an empty directory "/tmp/dotfiles"
         When I run `fullstop /tmp/dotfiles`
         Then the exit status should not be 0
-        And the output should not contain a backtrace
+        And the stderr should not contain a backtrace
         But the output should contain "Problem checking out /tmp/dotfiles"
 
     4 scenarios (4 passed)

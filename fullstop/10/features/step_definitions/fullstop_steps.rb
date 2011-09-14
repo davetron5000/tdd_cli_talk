@@ -44,7 +44,7 @@ end
 Then /^the banner should document the arguments as:$/ do |table|
   argument_string = table.raw.map { |row|
     option = row[0]
-    option = "[#{row[0]}]" unless row[1] == 'required'
+    option = "[#{row[0]}]" unless row[1] == 'which is required'
     option
   }.join(' ')
   Then %(the output should contain "#{argument_string}")

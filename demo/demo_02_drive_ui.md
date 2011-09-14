@@ -10,8 +10,8 @@
       Then it should have a banner
       And the banner should indicate that there are no options
       And the banner should document the arguments as:
-          |dotfiles_repo|required|
-          |checkout_dir |optional|
+          |dotfiles_repo|which is required|
+          |checkout_dir |which is optional|
       And there should be a one-line summary of what the app does
         
 
@@ -42,7 +42,7 @@
     Then /^the banner should document the arguments as:$/ do |table|
       argument_string = table.raw.map { |row|
         option = row[0]
-        option = "[#{row[0]}]" unless row[1] == 'required'
+        option = "[#{row[0]}]" unless row[1] == 'which is required'
         option
       }.join(' ')
       Then %(the output should contain "#{argument_string}")
@@ -85,8 +85,8 @@ _cd 08; rake features_
            (RSpec::Expectations::ExpectationNotMetError)
           features/fullstop.feature:22:in `And the banner should indicate that there are no options'
         And the banner should document the arguments as:
-          | dotfiles_repo | required |
-          | checkout_dir  | optional |
+          | dotfiles_repo | which is required |
+          | checkout_dir  | which is optional |
         And there should be a one-line summary of what the app does
 
     Failing Scenarios:
@@ -105,7 +105,14 @@ _cd 08; rake features_
 !SLIDE small
 
     @@@Ruby
-    opts.banner = "Usage: #{executable_name}\n\n" + 
+    opts.banner = "Usage: #{executable_name} " +
+      "dotfiles_repo [checkout_dir]"
+
+!SLIDE small
+
+    @@@Ruby
+    opts.banner = "Usage: #{executable_name} " +
+      "dotfiles_repo [checkout_dir]\n\n" +
       "Manages your dotfiles from a git repo"
 
 !SLIDE
@@ -122,8 +129,8 @@ _cd 10 ; rake features_
     Then it should have a banner
     And the banner should indicate that there are no options
     And the banner should document the arguments as:
-      | dotfiles_repo | required |
-      | checkout_dir  | optional |
+      | dotfiles_repo | which is required |
+      | checkout_dir  | which is optional |
     And there should be a one-line summary of what the app does
 
 !SLIDE bullets incremental

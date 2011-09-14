@@ -8,10 +8,10 @@
 # Work Outside-In
 
 !SLIDE
-# Design for testability
+# Get to unit tests
 
 !SLIDE
-# Get to unit tests
+# Design for testability
 
 !SLIDE bullets
 # Thanks!
