@@ -1,12 +1,6 @@
 !SLIDE subsection 
 # The UI sucks
 
-!SLIDE commandline incremental
-# The UI sucks
-
-    $ fullstop --help
-    Usage: fullstop [options]
-
 !SLIDE smaller
 
     @@@Cucumber
@@ -106,6 +100,11 @@ _cd 08; rake features_
 !SLIDE small
 
     @@@Ruby
+    opts.banner = "Usage: #{executable_name}"
+
+!SLIDE small
+
+    @@@Ruby
     opts.banner = "Usage: #{executable_name}\n\n" + 
       "Manages your dotfiles from a git repo"
 
@@ -126,13 +125,6 @@ _cd 10 ; rake features_
       | dotfiles_repo | required |
       | checkout_dir  | optional |
     And there should be a one-line summary of what the app does
-
-!SLIDE commandline
-
-    $ fullstop --help
-    Usage: fullstop dotfiles_repo [checkout_dir]
-      
-    fullstop manages symlinking your dotfiles from a git repo
 
 !SLIDE bullets incremental
 # Nice!

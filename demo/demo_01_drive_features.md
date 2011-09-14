@@ -29,47 +29,26 @@
     Using bundler (1.0.15) 
     Your bundle is complete! Use `bundle show [gemname]` to see where a bundled gem is installed.
 
-!SLIDE small 
-# Look at our code
-    @@@ Ruby 
-    #!/usr/bin/env ruby -w
+!SLIDE commandline incremental
+# Bootstrap
 
-    require 'optparse'
+    $ bin/fullstop --help
+    Usage: fullstop [options]
+    $ rake test
+    Started
+    .
+    Finished in 0.000548 seconds.
 
-    option_parser = OptionParser.new do |opts|
-      executable_name = File.basename(__FILE__)
-      opts.banner = "Usage: #{executable_name} [options]"
-    end
+    1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
 
-    option_parser.parse!
+    Test run options: --seed 5857
+    $ rake features
+    ...
 
-!SLIDE smaller
-# Look at our gems
-
-    @@@Ruby
-    # -*- encoding: utf-8 -*-
-    $:.push File.expand_path("../lib", __FILE__)
-    require "fullstop/version"
-
-    Gem::Specification.new do |s|
-      s.name        = "fullstop"
-      s.version     = Fullstop::VERSION
-      s.authors     = ["Dave Copeland"]
-      s.email       = ["davetron5000@gmail.com"]
-      s.homepage    = ""
-      s.summary     = %q{TODO: Write a gem summary}
-      s.description = %q{TODO: Write a gem description}
-
-      s.rubyforge_project = "fullstop"
-
-      s.files         = `git ls-files`.split("\n")
-      s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-      s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-      s.require_paths = ["lib"]
-      s.add_development_dependency('rdoc')
-      s.add_development_dependency('grancher')
-      s.add_development_dependency('aruba')
-    end
+    1 scenario (1 passed)
+    3 steps (3 passed)
+    0m0.126s
+    
 
 !SLIDE smaller
 # Let's add a feature
@@ -158,7 +137,9 @@ _cd 1 ; rake features_
 
     @@@Ruby
     Given /^I have my dotfiles in a git repo at "([^"]*)"$/ do |repo|
-      # no-op until we need the repo
+      # no-op; I've set up a magic repo
+      # Could use this space to set up a real
+      # test repo
     end
 
 !SLIDE smaller
@@ -376,29 +357,19 @@ _cd 4; rake features_
 
 !SLIDE bullets incremental
 # Refactor
-* Big procedural blob
-* Option parsing boilerplate up front
-* Nasty `Dir[]` expression
+* I want the main logic first
+* Hide the nasty `Dir[]` expression
 
 !SLIDE 
-# Outline of ideal app
+# New `bin/fullstop`
+## The top 
 
     @@@Ruby
-    #!/usr/bin/env ruby -w
-    require 'optparse'
+    #!/usr/bin/env ruby
+    
     require 'fileutils'
-
     include FileUtils
 
-    # main logic
-    # supplemental methods
-    # UI setup
-    # parse command-line and go!
-
-!SLIDE 
-# main logic
-
-    @@@Ruby
     def main(repo,checkout_dir)
       mkdir_p checkout_dir
       chdir checkout_dir
@@ -411,7 +382,8 @@ _cd 4; rake features_
     end
 
 !SLIDE small
-# supplemental methods
+# New `bin/fullstop`
+# Support methods come next
 
     @@@Ruby
     def dotfiles_in(dir)
@@ -424,7 +396,8 @@ _cd 4; rake features_
     end
 
 !SLIDE small
-# UI setup
+# New `/bin/fullstop`
+## Call `main`
 
     @@@ Ruby
     option_parser = OptionParser.new do |opts|
@@ -432,10 +405,6 @@ _cd 4; rake features_
       opts.banner = "Usage: #{executable_name} [options]"
     end
 
-!SLIDE
-# parse command-line and go!
-
-    @@@Ruby
     option_parser.parse!
 
     repo = ARGV[0]
@@ -471,8 +440,15 @@ _cd 5; rake features_
 !SLIDE
 # We still want `~` to be default
 
+!SLIDE bullets incremental
+# Don't forget:
+## We're on production
+* Don't use "~"...
+* use "in my home directory"
+* reads better, and helps us test
+
 !SLIDE smaller
-# We still want `~` to be default
+# Scenario
 
     @@@Cucumber
     Scenario: It should install into my home directory by default
@@ -484,28 +460,6 @@ _cd 5; rake features_
           in "dotfiles" in my home directory
       And my dotfiles should be symlinked in my home directory
 
-!SLIDE bullets incremental
-# Don't forget:
-## We're on production
-* "in my home directory" vs "~"
-
-!SLIDE small
-# Change where $HOME is
-## `features/support/env.rb`
-    @@@ Ruby
-    FAKE_HOME = '/tmp/fakehome'
-
-    Before do
-      @real_home = ENV['HOME']
-      ENV['HOME'] = '/tmp/fakehome'
-      rm_rf FAKE_HOME, :secure => true, :verbose => false
-      mkdir FAKE_HOME, :verbose => false
-    end
-
-    After do
-      ENV['HOME'] = @real_home
-    end
-    
 !SLIDE smaller
 # Implement new steps
 
@@ -522,6 +476,23 @@ _cd 5; rake features_
              "#{ENV['HOME']}")
     end
 
+!SLIDE small
+# Change where `$HOME` is
+## `features/support/env.rb`
+    @@@ Ruby
+    FAKE_HOME = '/tmp/fakehome'
+
+    Before do
+      @real_home = ENV['HOME']
+      ENV['HOME'] = '/tmp/fakehome'
+      rm_rf FAKE_HOME, :secure => true, :verbose => false
+      mkdir FAKE_HOME, :verbose => false
+    end
+
+    After do
+      ENV['HOME'] = @real_home
+    end
+    
 !SLIDE
 # Go
 
@@ -632,11 +603,7 @@ _cd 6; rake features_
 
 
 !SLIDE bullets incremental
-# Refactor?
-* Not this time
-
-!SLIDE bullets incremental
 # So, we can test drive new features
 ## But what about:
-* the UI? (it currently sucks)
+* the UI? (it currently sucks) _*_
 * our complete lack of error handling?

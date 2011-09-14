@@ -1,22 +1,16 @@
 !SLIDE bullets incremental
 # TDD?
-* <span class="test">Write a failing test</span>
-* <span class="fix">Make that test pass</span>
-* Fix up your hacky code
-
-!SLIDE bullets incremental
-# TDD?
 * <span class="test">Test</span>
 * <span class="fix">Fix</span>
 * Refactor
 
-!SLIDE  bullets incremental
+!SLIDE 
 # Challenges for CLI
+
+!SLIDE  bullets incremental
+# CLI apps tend to be implemented on production
 * `scp files.tgz dev.example.com/var/deploy`
 * `~/.my_app.rc`
 * `rm`
-* `--help`
-
-!SLIDE
-# CLI apps tend to be implemented on production
+* Also: `--help`
 

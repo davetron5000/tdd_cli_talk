@@ -204,21 +204,9 @@ _cd 11 && rake features_
 * Those Exceptions are not documented
 
 !SLIDE bullets incremental
-# Mock filesystem?
-## `MockFS`
-* Requires rewrite
-* No affect on other code that uses `File`, etc.
-
-!SLIDE bullets incremental
-# Mock filesystem?
-## `FakeFS`
-* Not every method supported
-* Requires our code to do `FileUtils.mkdir_p`
-
-!SLIDE bullets incremental
-# Set up our own FS in `/tmp` ?
-* Too much setup
-* OK for acceptance; not for unit tests
+# How to Simulate?
+* Mock filesystem?
+* Set up our own FS in `/tmp` ?
 
 !SLIDE bullets incremental
 # Mock code
