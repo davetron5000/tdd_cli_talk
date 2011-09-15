@@ -6,5 +6,5 @@
 2. `gem install showoff`
 3. `showoff serve`
 
-There's obviously nothing here right now
+Or, view online at http://tdd-ruby-cli.heroku.com
 
