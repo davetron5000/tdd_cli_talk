@@ -1,5 +1,12 @@
+!SLIDE bullets incremental
+# Bootstrap
+* 0 to running tests ASAP
+* Reduces friction
+* Enables and encourages
+
 !SLIDE commandline small incremental
 # Bootstrap
+
 
     $ methadone fullstop
     # => basic gemified project
