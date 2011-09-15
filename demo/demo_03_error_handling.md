@@ -422,6 +422,9 @@ _cd 15; rake test_
 
 _ cd 16; rake features_
 
+!SLIDE 
+# More time?
+
 !SLIDE bullets incremental
 # We have a new problem
 * Nice error messages
