@@ -137,9 +137,6 @@ _cd 1 ; rake features_
 
     @@@Ruby
     Given /^an empty directory "([^"]*)"$/ do |dir|
-      unless File.split(dir)[0] == "/tmp"
-        raise "Probably not what you want" 
-      end
       rm_rf dir, :secure => true, :verbose => false
     end
 
