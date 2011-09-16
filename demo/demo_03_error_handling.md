@@ -39,10 +39,6 @@
     @@@Ruby
     require 'fileutils'
 
-
-    
-    
-
     
     
 
@@ -70,10 +66,6 @@
 !SLIDE smaller
     @@@Ruby
     require 'fileutils'
-
-
-
-    
 
     module Fullstop
       module CLI
@@ -327,6 +319,7 @@ _cd 12; rake test_
         ln file,'.'
       end
     end
+_cd 13; rake test_
 
 !SLIDE small
 # Fix
@@ -352,33 +345,29 @@ _cd 13; rake test_
 
 !SLIDE smaller
 # Fast-Forward
-_cd 15; rake test_
     @@@Ruby
-    def main(repo,checkout_dir)
-      checkout_dir = ENV['HOME'] if checkout_dir.nil?
+    checkout_dir = ENV['HOME'] if checkout_dir.nil?
+    begin
+      mkdir_p checkout_dir
+    rescue
+      raise "Problem creating directory #{checkout_dir}"
+    end
+    begin
+      chdir checkout_dir
+    rescue
+      raise "Problem changing to directory #{checkout_dir}"
+    end
+    unless system("git clone #{repo} dotfiles")
+      raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
+    end
+    dotfiles_in(checkout_dir) do |file| 
       begin
-        mkdir_p checkout_dir
+        ln file,'.'
       rescue
-        raise "Problem creating directory #{checkout_dir}"
-      end
-      begin
-        chdir checkout_dir
-      rescue
-        raise "Problem changing to directory #{checkout_dir}"
-      end
-
-      unless system("git clone #{repo} dotfiles")
-        raise "Problem checking out #{repo} into #{checkout_dir}/dotfiles"
-      end
-
-      dotfiles_in(checkout_dir) do |file| 
-        begin
-          ln file,'.'
-        rescue
-          raise "Problem symlinking #{file} into #{checkout_dir}"
-        end
+        raise "Problem symlinking #{file} into #{checkout_dir}"
       end
     end
+_cd 15; rake test_
 
 !SLIDE
 # Refactor
