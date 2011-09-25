@@ -354,3 +354,141 @@ _04_
     end
 
 _04_
+
+!SLIDE
+# GREEN!
+
+!SLIDE commandline smaller
+    $ rake features
+    (in /Users/davec/Projects/tdd_talk/fullstop/04)
+    Feature: Install my dotfiles
+      In order to set up a new user account quickly
+      As a developer with his dotfiles in git
+      I should be able to maintain them easily
+
+      Scenario: Symlink my dotfiles
+        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        When I successfully run `fullstop /tmp/testdotfiles`
+        Then my dotfiles should be checked out as "dotfiles" in my home directory
+        And my dotfiles should be symlinked in my home directory
+
+    1 scenario (1 passed)
+    4 steps (4 passed)
+
+!SLIDE bullets incremental
+# Refactor
+* **No** variables
+* Horrible regexy `Dir` thing
+* repetition
+* Backwards organization
+
+!SLIDE smaller
+    @@@Ruby
+    DOTFILES = 'dotfiles'
+
+    def main(repo,link_dir)
+      chdir link_dir
+      %x[git clone #{repo} #{DOTFILES}]
+
+      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+        ln_s file,'.'
+      end
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #
+
+!SLIDE smaller
+    @@@Ruby
+    DOTFILES = 'dotfiles'
+
+    def main(repo,link_dir)
+      chdir link_dir
+      %x[git clone #{repo} #{DOTFILES}]
+
+      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+        ln_s file,'.'
+      end
+    end
+
+    def dotfiles_in(cloned_repo)
+      Dir["#{cloned_repo}/{*,.*}"].reject { |file|
+        %w(. ..).include? File.basename(file) 
+      }.each do |file| 
+        yield file
+      end
+    end
+
+
+
+
+
+
+    #
+
+!SLIDE smaller
+    @@@Ruby
+    DOTFILES = 'dotfiles'
+
+    def main(repo,link_dir)
+      chdir link_dir
+      %x[git clone #{repo} #{DOTFILES}]
+
+      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+        ln_s file,'.'
+      end
+    end
+
+    def dotfiles_in(cloned_repo)
+      Dir["#{cloned_repo}/{*,.*}"].reject { |file|
+        %w(. ..).include? File.basename(file) 
+      }.each do |file| 
+        yield file
+      end
+    end
+
+    option_parser = OptionParser.new do |opts|
+    end
+
+    option_parser.parse!
+
+    main(ARGV[0],ENV['HOME'])
+
+!SLIDE
+# Is it a good refactor?
+_05_
+
+!SLIDE commandline smaller
+    $ rake features
+    (in /Users/davec/Projects/tdd_talk/fullstop/04)
+    Feature: Install my dotfiles
+      In order to set up a new user account quickly
+      As a developer with his dotfiles in git
+      I should be able to maintain them easily
+
+      Scenario: Symlink my dotfiles
+        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        When I successfully run `fullstop /tmp/testdotfiles`
+        Then my dotfiles should be checked out as "dotfiles" in my home directory
+        And my dotfiles should be symlinked in my home directory
+
+    1 scenario (1 passed)
+    4 steps (4 passed)
+
+!SLIDE bullets incremental
+# We can now drive new features
+## But what about:
+* the UI? (it currently sucks)
+* our complete lack of error handling?
