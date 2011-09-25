@@ -60,5 +60,35 @@ _06_
     2 scenarios (1 failed, 1 passed)
     10 steps (1 failed, 2 skipped, 7 passed)
 
-!SLIDE
+!SLIDE smaller
 # Easiest fix ever
+
+    @@@Ruby
+    option_parser = OptionParser.new do |opts|
+      
+      
+      
+    end
+
+    option_parser.parse!
+
+    main(ARGV[0],ENV['HOME'])
+
+!SLIDE smaller
+# Easiest fix ever
+
+    @@@Ruby
+    option_parser = OptionParser.new do |opts|
+      executable = File.basename(__FILE__)
+      opts.banner = "Usage: #{executable} repo\n\n" +
+        "Manage your dotfiles from a git repo"
+    end
+
+    option_parser.parse!
+
+    main(ARGV[0],ENV['HOME'])
+
+
+!SLIDE bullets incremental
+# Refactor?
+* Nah
