@@ -4,7 +4,8 @@ require 'rake/testtask'
 require 'cucumber'
 require 'cucumber/rake/task'
 require 'rdoc/task'
-require 'grancher/task'
+
+#include Rake::DSL
 
 Bundler::GemHelper.install_tasks
 
@@ -15,7 +16,7 @@ end
 CUKE_RESULTS = 'results.html'
 CLEAN << CUKE_RESULTS
 Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "features -x -s"
+  t.cucumber_opts = "features --format pretty -x -s"
   t.fork = false
 end
 
@@ -23,15 +24,5 @@ Rake::RDocTask.new do |rd|
   rd.main = "README.rdoc"
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
 end
-
-Grancher::Task.new do |g|
-  g.branch = 'gh-pages'
-  g.push_to = 'origin'
-  g.directory 'html'
-end
-
-
-desc 'Publish rdoc on github pages and push to github'
-task :publish_rdoc => [:rdoc,:publish]
 
 task :default => [:test,:features]

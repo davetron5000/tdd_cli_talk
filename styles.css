@@ -53,6 +53,10 @@ code.result {
     color: #7AB800;
 }
 
+.cuke-error {
+    color: #A30050;
+    font-weight: bold;
+}
 /*
  *        orig       Opower
  * color: black      black

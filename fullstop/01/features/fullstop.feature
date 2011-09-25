@@ -1,10 +1,11 @@
 Feature: Install my dotfiles
-  As an organized developer who has his dotfiles on github
-  I want to be able to set up a new user account easily
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-  Scenario: Symlink my dotfiles to an arbitrary directory
-    Given an empty directory "/tmp/dotfiles"
-    And I have my dotfiles in a git repo at "/Users/davec/Projects/testdotfiles"
-    When I successfully run `fullstop /Users/davec/Projects/testdotfiles /tmp/dotfiles`
-    Then my dotfiles should be checked out in "/tmp/dotfiles/dotfiles"
-    And my dotfiles should be symlinked in "/tmp/dotfiles"
+  Scenario: Symlink my dotfiles
+    Given I have my dotfiles in a git at "/tmp/testdotfiles"
+    When I successfully run `fullstop /tmp/testdotfiles`
+    Then my dotfiles should be checked out as "dotfiles" in my home directory
+    And my dotfiles should be symlinked in my home directory
+
