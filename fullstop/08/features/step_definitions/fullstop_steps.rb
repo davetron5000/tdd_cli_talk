@@ -35,6 +35,14 @@ Then /^my dotfiles should be symlinked in my home directory$/ do
   end
 end
 
+Then /^the output should not contain a backtrace$/ do
+  Then %(the output should not contain "<main>")
+end
+
+Given /^the file "([^"]*)" exists in my home directory$/ do |file|
+  touch File.join(ENV['HOME'],file)
+end
+
 RSpec::Matchers.define :be_a_symlink do
   match do |actual|
     File.open(actual).lstat.symlink?
@@ -52,3 +60,5 @@ RSpec::Matchers.define :be_a_symlink do
     "be a symlink"
   end
 end
+
+

@@ -9,7 +9,7 @@ def git(command,arg)
 end
 
 FILES = %w(.bashrc .inputrc .vimrc)
-Given /^I have my dotfiles in a git at "([^"]*)"$/ do |git_repo|
+Given /^I have my dotfiles in git at "([^"]*)"$/ do |git_repo|
   raise "Watch out, /tmp only" unless git_repo =~ /\/tmp/
   
   rm_rf git_repo, :secure => true, :verbose => false if File.exists? git_repo

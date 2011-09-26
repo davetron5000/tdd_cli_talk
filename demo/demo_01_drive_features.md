@@ -72,7 +72,7 @@
       I should be able to maintain them easily
 
       Scenario: Symlink my dotfiles
-        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        Given I have my dotfiles in git at "/tmp/testdotfiles"
         When I successfully run `fullstop /tmp/testdotfiles`
         Then my dotfiles should be checked out as "dotfiles" 
           in my home directory
@@ -89,7 +89,7 @@ _01_
       I should be able to maintain them easily
 
       Scenario: Symlink my dotfiles
-        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        Given I have my dotfiles in git at "/tmp/testdotfiles"
         When I successfully run `fullstop /tmp/testdotfiles`
         Then my dotfiles should be checked out as "dotfiles" in my home directory
         And my dotfiles should be symlinked in my home directory
@@ -100,7 +100,7 @@ _01_
 
     You can implement step definitions for undefined steps with these snippets:
 
-    Given /^I have my dotfiles in a git at "([^"]*)"$/ do |arg1|
+    Given /^I have my dotfiles in git at "([^"]*)"$/ do |arg1|
       pending # express the regexp above with the code you wish you had
     end
 
@@ -123,7 +123,7 @@ _01_
 
     FILES = %w(.bashrc .inputrc .vimrc)
 
-    Given /^I have my dotfiles in a git at "(.*)"$/ do |git_repo|
+    Given /^I have my dotfiles in git at "(.*)"$/ do |git_repo|
       rm_rf git_repo, :secure => true if File.exists? git_repo
       mkdir_p git_repo
       chdir git_repo
@@ -205,7 +205,7 @@ _02_
 !SLIDE commandline  smaller
 
     $ rake features
-        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        Given I have my dotfiles in git at "/tmp/testdotfiles"
         When I successfully run `fullstop /tmp/testdotfiles`
         Then my dotfiles should be checked out as "dotfiles" in my home directory
           expected file?("/Users/davec/dotfiles/.bashrc") to return true, got false (RSpec::Expectations::ExpectationNotMetError)
@@ -299,7 +299,7 @@ _03_
       I should be able to maintain them easily
 
       Scenario: Symlink my dotfiles
-        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        Given I have my dotfiles in git at "/tmp/testdotfiles"
         When I successfully run `fullstop /tmp/testdotfiles`
         Then my dotfiles should be checked out as "dotfiles" in my home directory
         And my dotfiles should be symlinked in my home directory
@@ -367,7 +367,7 @@ _04_
       I should be able to maintain them easily
 
       Scenario: Symlink my dotfiles
-        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        Given I have my dotfiles in git at "/tmp/testdotfiles"
         When I successfully run `fullstop /tmp/testdotfiles`
         Then my dotfiles should be checked out as "dotfiles" in my home directory
         And my dotfiles should be symlinked in my home directory
@@ -479,7 +479,7 @@ _05_
       I should be able to maintain them easily
 
       Scenario: Symlink my dotfiles
-        Given I have my dotfiles in a git at "/tmp/testdotfiles"
+        Given I have my dotfiles in git at "/tmp/testdotfiles"
         When I successfully run `fullstop /tmp/testdotfiles`
         Then my dotfiles should be checked out as "dotfiles" in my home directory
         And my dotfiles should be symlinked in my home directory

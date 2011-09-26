@@ -4,7 +4,7 @@ Feature: Install my dotfiles
   I should be able to maintain them easily
 
   Scenario: Symlink my dotfiles
-    Given I have my dotfiles in a git at "/tmp/testdotfiles"
+    Given I have my dotfiles in git at "/tmp/testdotfiles"
     When I successfully run `fullstop /tmp/testdotfiles`
     Then my dotfiles should be checked out as "dotfiles" in my home directory
     And my dotfiles should be symlinked in my home directory
