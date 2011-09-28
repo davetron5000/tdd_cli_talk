@@ -79,7 +79,7 @@
         And my dotfiles should be symlinked in my home directory
 _01_
 
-!SLIDE commandline incremental smaller
+!SLIDE commandline smaller
 
     $ rake features
     (in /Users/davec/Projects/tdd_talk/fullstop/01)

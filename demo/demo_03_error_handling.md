@@ -129,5 +129,13 @@ _08_
 
 _09_
 
-!SLIDE
-# 
+!SLIDE bullets incremental
+# That's just one case 
+* Edge cases hard to simulate with an acceptance test
+* Lots of set up
+* Potentially Fragile
+
+!SLIDE bullets incremental
+# Time for Unit tests
+* Unit tests run fast
+* Testable units are **good**

@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby -w
+
+$: << File.expand_path(File.dirname(File.realpath(__FILE__)) + '/../lib') 
+
+require 'optparse'
+require 'fullstop'
+
+
+option_parser = OptionParser.new do |opts|
+  executable = File.basename(__FILE__)
+  opts.banner = "Usage: #{executable} repo\n\n" +
+    "Manage your dotfiles from a git repo"
+end
+
+option_parser.parse!
+
+include Fullstop
+
+begin
+  CLI.main(ARGV[0],ENV['HOME'])
+rescue Exception => ex
+  STDERR.puts ex.message
+  exit 1
+end
