@@ -42,9 +42,7 @@
       from bin/fullstop:35:in `<main>'
        
 !SLIDE bullets incremental
-# What's wrong?
-* Horrible backtrace
-* Lame error message
+# Horrible backtrace
 
 !SLIDE smaller
     @@@Cucumber
@@ -53,8 +51,7 @@
       And the file ".bashrc" exists in my home directory
       When I run `fullstop /tmp/testdotfiles`
       Then the exit status should not be 0
-      And the stderr should contain "File exists"
-      And the stderr should contain ".bashrc"
+      And the stderr should match /File exists/
       And the output should not contain a backtrace
 
 !SLIDE smaller

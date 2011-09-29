@@ -4,9 +4,6 @@
 * `davidcopeland (at) naildrivin5.com`
 * [tdd-ruby-cli.heroku.com](http://tdd-ruby-cli.heroku.com)
 
-!SLIDE center
-<img src="cover.png" width="1000"/>
-
 !SLIDE commandline incremental
 # Who am I? #
 
@@ -17,4 +14,6 @@
     $ whois Opower
     An energy-efficiency software company in DC
 
+!SLIDE center
+<img src="cover.png" width="1000"/>
 

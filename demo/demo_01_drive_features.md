@@ -1,5 +1,9 @@
 !SLIDE bullets incremental
-# Bootstrap
+* `mkdir fullstop`
+* `bundle gem fullstop`
+
+!SLIDE bullets incremental
+# Step 0: Bootstrap
 * 0 to running tests ASAP
 * Reduces friction
 * Enables and encourages
@@ -35,6 +39,14 @@
     Installing rdoc (3.9.4) 
     Using bundler (1.0.15) 
     Your bundle is complete! Use `bundle show [gemname]` to see where a bundled gem is installed.
+
+!SLIDE bullets incremental
+# Aruba
+* Cucumber Steps for command-line
+* "When I run..."
+* "Then the exit status should not be 0"
+* "Then the stderr should contain..."
+* etc.
 
 !SLIDE commandline 
 # Bootstrap

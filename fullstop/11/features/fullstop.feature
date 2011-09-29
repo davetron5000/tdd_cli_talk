@@ -24,5 +24,4 @@ Feature: Install my dotfiles
     When I run `fullstop /tmp/testdotfiles`
     Then the exit status should not be 0
     And the stderr should contain "File exists"
-    And the stderr should contain ".bashrc"
     And the output should not contain a backtrace
