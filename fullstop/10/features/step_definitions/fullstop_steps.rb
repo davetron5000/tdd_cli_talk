@@ -24,7 +24,7 @@ end
 Then /^my dotfiles should be checked out as "([^"]*)" in my home directory$/ do |dir|
   path = File.join(ENV['HOME'],dir)
   FILES.map{ |file| File.join(path,file) }.each do |file|
-    Then %(a file named "#{file}" should exist)
+    step %(a file named "#{file}" should exist)
   end
 end
 
@@ -36,7 +36,7 @@ Then /^my dotfiles should be symlinked in my home directory$/ do
 end
 
 Then /^the output should not contain a backtrace$/ do
-  Then %(the output should not contain "<main>")
+  step %(the output should not contain "<main>")
 end
 
 Given /^the file "([^"]*)" exists in my home directory$/ do |file|

@@ -10,8 +10,8 @@ Before do
   @puts = true
   @real_home = ENV['HOME']
   fake_home = File.join('/tmp','fakehome')
-  rm_rf fake_home if File.exists? fake_home
-  mkdir_p fake_home
+  rm_rf fake_home, :verbose => false if File.exists? fake_home
+  mkdir_p fake_home, :verbose => false
   ENV['HOME'] = fake_home
 end
 

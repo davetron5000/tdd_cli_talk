@@ -24,7 +24,7 @@ end
 Then /^my dotfiles should be checked out as "([^"]*)" in my home directory$/ do |dir|
   path = File.join(ENV['HOME'],dir)
   FILES.map{ |file| File.join(path,file) }.each do |file|
-    Then %(a file named "#{file}" should exist)
+    step %(a file named "#{file}" should exist)
   end
 end
 

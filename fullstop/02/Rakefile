@@ -3,6 +3,7 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'cucumber'
 require 'cucumber/rake/task'
+gem 'rdoc'
 require 'rdoc/task'
 
 #include Rake::DSL
