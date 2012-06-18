@@ -10,10 +10,8 @@
     $ who am i
     Dave Copeland / @davetron5000
     $ ps
-    Principal Engineer at Opower
-    $ whois Opower
-    An energy-efficiency software company in DC
+    Tech Lead at LivingSocial
 
 !SLIDE center
-<img src="cover.png" width="1000"/>
+<img src="cover.png" height="720"/>
 

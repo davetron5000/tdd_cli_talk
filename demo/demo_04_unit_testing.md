@@ -124,41 +124,40 @@
 # Is it good?
 _10_
 
-!SLIDE commandline smaller
-    $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/10)
-    Feature: Install my dotfiles
-      In order to set up a new user account quickly
-      As a developer with his dotfiles in git
-      I should be able to maintain them easily
+!SLIDE
+<pre style="font-size: 22px">
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-      Scenario: Symlink my dotfiles
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        When I successfully run `fullstop /tmp/testdotfiles`
-        Then my dotfiles should be checked out as "dotfiles" in my home directory
-        And my dotfiles should be symlinked in my home directory
+  Scenario: Symlink my dotfiles
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
-      Scenario: The UI is not sucky
-        When I get help for "fullstop"
-        Then the exit status should be 0
-        And the banner should be present
-        And the banner should document that this app takes no options
-        And the banner should document that this app's arguments are:
-          | repo | which is required |
-        And there should be a one line summary of what the app does
+  Scenario: The UI is not sucky
+    <span class='ansi-32'>When I get help for "<span class='ansi-32'><span class='ansi-1'>fullstop<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then the exit status should be <span class='ansi-32'><span class='ansi-1'>0<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'><span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the banner should be present<span class='ansi-0'></span></span>
+    <span class='ansi-32'>And the banner should document that this app takes no options<span class='ansi-0'></span></span>
+    <span class='ansi-32'>And the banner should document that this app's arguments are:<span class='ansi-0'></span></span>
+      | <span class='ansi-32'>repo<span class='ansi-0'><span class='ansi-0'> |<span class='ansi-0'> <span class='ansi-32'>which is required<span class='ansi-0'><span class='ansi-0'> |<span class='ansi-0'></span></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And there should be a one line summary of what the app does<span class='ansi-0'></span></span>
 
-      Scenario: File already exists and cannot be symlinked
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        And the file ".bashrc" exists in my home directory
-        When I run `fullstop /tmp/testdotfiles`
-        Then the exit status should not be 0
-        And the stderr should contain "File exists"
-        And the stderr should contain ".bashrc"
-        And the output should not contain a backtrace
+  Scenario: File already exists and cannot be symlinked
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the file "<span class='ansi-32'><span class='ansi-1'>.bashrc<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" exists in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>When I run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then the exit status should not be <span class='ansi-32'><span class='ansi-1'>0<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'><span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the stderr should contain "<span class='ansi-32'><span class='ansi-1'>File exists<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the output should not contain a backtrace<span class='ansi-0'></span></span>
 
-    3 scenarios (3 passed)
-    17 steps (17 passed)
-    0m0.477s
+3 scenarios (<span class='ansi-32'>3 passed<span class='ansi-0'>)</span></span>
+16 steps (<span class='ansi-32'>16 passed<span class='ansi-0'>)</span></span>
+0m0.483s
+</pre>
 
 
 !SLIDE bullets incremental
@@ -318,47 +317,39 @@ _13_
 
 _13_
 
-!SLIDE commandline smaller
-    $ rake test features
-    (in /Users/davec/Projects/tdd_talk/fullstop/13)
-    Loaded suite /Users/davec/.rvm/gems/ruby-1.9.2-p290@global/gems/rake-0.8.7/lib/rake/rake_test_loader
-    Started
-    .
-    Finished in 0.001114 seconds.
+!SLIDE 
+<pre style="font-size: 22px">
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-    1 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+  Scenario: Symlink my dotfiles
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
-    Test run options: --seed 64493
-    Feature: Install my dotfiles
-      In order to set up a new user account quickly
-      As a developer with his dotfiles in git
-      I should be able to maintain them easily
+  Scenario: The UI is not sucky
+    <span class='ansi-32'>When I get help for "<span class='ansi-32'><span class='ansi-1'>fullstop<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then the exit status should be <span class='ansi-32'><span class='ansi-1'>0<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'><span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the banner should be present<span class='ansi-0'></span></span>
+    <span class='ansi-32'>And the banner should document that this app takes no options<span class='ansi-0'></span></span>
+    <span class='ansi-32'>And the banner should document that this app's arguments are:<span class='ansi-0'></span></span>
+rm -rf /tmp/fakehome
+mkdir -p /tmp/fakehome
+      | <span class='ansi-32'>repo<span class='ansi-0'><span class='ansi-0'> |<span class='ansi-0'> <span class='ansi-32'>which is required<span class='ansi-0'><span class='ansi-0'> |<span class='ansi-0'></span></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And there should be a one line summary of what the app does<span class='ansi-0'></span></span>
 
-      Scenario: Symlink my dotfiles
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        When I successfully run `fullstop /tmp/testdotfiles`
-        Then my dotfiles should be checked out as "dotfiles" in my home directory
-        And my dotfiles should be symlinked in my home directory
+  Scenario: File already exists and cannot be symlinked
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the file "<span class='ansi-32'><span class='ansi-1'>.bashrc<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" exists in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>When I run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then the exit status should not be <span class='ansi-32'><span class='ansi-1'>0<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'><span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the stderr should contain "<span class='ansi-32'><span class='ansi-1'>File exists<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the output should not contain a backtrace<span class='ansi-0'></span></span>
 
-      Scenario: The UI is not sucky
-        When I get help for "fullstop"
-        Then the exit status should be 0
-        And the banner should be present
-        And the banner should document that this app takes no options
-        And the banner should document that this app's arguments are:
-          | repo | which is required |
-        And there should be a one line summary of what the app does
-
-      Scenario: File already exists and cannot be symlinked
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        And the file ".bashrc" exists in my home directory
-        When I run `fullstop /tmp/testdotfiles`
-        Then the exit status should not be 0
-        And the stderr should contain "File exists"
-        And the stderr should contain ".bashrc"
-        And the output should not contain a backtrace
-
-    3 scenarios (3 passed)
-    17 steps (17 passed)
-    0m0.476s
-
+3 scenarios (<span class='ansi-32'>3 passed<span class='ansi-0'>)</span></span>
+16 steps (<span class='ansi-32'>16 passed<span class='ansi-0'>)</span></span>
+0m0.482s
+</pre>

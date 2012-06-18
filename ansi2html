@@ -1,0 +1,10 @@
+#!/usr/bin/ruby
+
+ARGF.each do |line|
+  line = line.chomp
+  char = "\e"
+  while line =~ /(^.*)([^#{char}]*)#{char}\[(\d+)m([^#{char}]*)(.*$)/
+    line = "#{$1}#{$2}<span class='ansi-#{$3}'>#{$4}</span>#{$5}"
+  end
+  puts line 
+end

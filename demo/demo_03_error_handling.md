@@ -67,44 +67,49 @@
 
 _08_
 
-!SLIDE commandline smaller
+!SLIDE 
+<pre style="font-size: 18px">
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-    $ rake features
-      Scenario: File already exists and cannot be symlinked
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-    touch /tmp/fakehome/.bashrc
-        And the file ".bashrc" exists in my home directory
-        When I run `fullstop /tmp/testdotfiles`
-        Then the exit status should not be 0
-        And the stderr should contain "in `symlink': File exists"
-        And the stderr should contain "(Errno::EEXIST)"
-        And the output should not contain a backtrace
-          expected "/Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:347:in `symlink': File exists - (/tmp/fakehome/dotfiles/.bashrc, ./.bashrc) (Errno::EEXIST)\n\tfrom /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:347:in `block in ln_s'\n\tfrom /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1437:in `fu_each_src_dest0'\n\tfrom /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:345:in `ln_s'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:15:in `block in main'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:23:in `block in dotfiles_in'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `each'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `dotfiles_in'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:14:in `main'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:35:in `<main>'\n" not to include "<main>"
-          Diff:
-          @@ -1,2 +1,11 @@
-          -<main>
-          +/Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:347:in `symlink': File exists - (/tmp/fakehome/dotfiles/.bashrc, ./.bashrc) (Errno::EEXIST)
-          +	from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:347:in `block in ln_s'
-          +	from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:1437:in `fu_each_src_dest0'
-          +	from /Users/davec/.rvm/rubies/ruby-1.9.2-p290/lib/ruby/1.9.1/fileutils.rb:345:in `ln_s'
-          +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:15:in `block in main'
-          +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:23:in `block in dotfiles_in'
-          +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `each'
-          +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `dotfiles_in'
-          +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:14:in `main'
-          +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:35:in `<main>'
-           (RSpec::Expectations::ExpectationNotMetError)
-          features/fullstop.feature:28:in `And the output should not contain a backtrace'
+  Scenario: File already exists and cannot be symlinked
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the file "<span class='ansi-32'><span class='ansi-1'>.bashrc<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" exists in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+rake aborted!
+Cucumber failed
 
-    Failing Scenarios:
-    cucumber features/fullstop.feature:21
+Tasks: TOP => features
+(See full trace by running task with --trace)
+    <span class='ansi-32'>When I run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then the exit status should not be <span class='ansi-32'><span class='ansi-1'>0<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'><span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And the stderr should contain "<span class='ansi-32'><span class='ansi-1'>File exists<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-31'>And the output should not contain a backtrace<span class='ansi-0'></span></span>
+<span class='ansi-31'>      expected "/Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:347:in `symlink': File exists - (/tmp/fakehome/dotfiles/.bashrc, ./.bashrc) (Errno::EEXIST)\n\tfrom /Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:347:in `block in ln_s'\n\tfrom /Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:1437:in `fu_each_src_dest0'\n\tfrom /Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:345:in `ln_s'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:15:in `block in main'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:23:in `block in dotfiles_in'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `each'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `dotfiles_in'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:14:in `main'\n\tfrom /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:35:in `<main>'\n" not to include "<main>"<span class='ansi-0'></span></span>
+<span class='ansi-31'>      Diff:<span class='ansi-0'></span></span>
+<span class='ansi-31'>      @@ -1,2 +1,11 @@<span class='ansi-0'></span></span>
+<span class='ansi-31'>      -<main><span class='ansi-0'></span></span>
+<span class='ansi-31'>      +/Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:347:in `symlink': File exists - (/tmp/fakehome/dotfiles/.bashrc, ./.bashrc) (Errno::EEXIST)<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:347:in `block in ln_s'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:1437:in `fu_each_src_dest0'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/.rvm/rubies/ruby-1.9.2-p318/lib/ruby/1.9.1/fileutils.rb:345:in `ln_s'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:15:in `block in main'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:23:in `block in dotfiles_in'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `each'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:20:in `dotfiles_in'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:14:in `main'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      +	from /Users/davec/Projects/tdd_talk/fullstop/08/bin/fullstop:35:in `<main>'<span class='ansi-0'></span></span>
+<span class='ansi-31'>       (RSpec::Expectations::ExpectationNotMetError)<span class='ansi-0'></span></span>
+<span class='ansi-31'>      features/fullstop.feature:27:in `And the output should not contain a backtrace'<span class='ansi-0'></span></span>
 
-    3 scenarios (1 failed, 2 passed)
-    17 steps (1 failed, 16 passed)
-    0m0.488s
-    rake aborted!
-    Cucumber failed
+<span class='ansi-31'>Failing Scenarios:<span class='ansi-0'></span></span>
+<span class='ansi-31'>cucumber features/fullstop.feature:21<span class='ansi-0'></span></span>
 
+3 scenarios (<span class='ansi-31'>1 failed<span class='ansi-0'>, <span class='ansi-32'>2 passed<span class='ansi-0'>)</span></span></span></span>
+16 steps (<span class='ansi-31'>1 failed<span class='ansi-0'>, <span class='ansi-32'>15 passed<span class='ansi-0'>)</span></span></span></span>
+0m0.484s
+</pre>
 
 !SLIDE
     @@@Ruby

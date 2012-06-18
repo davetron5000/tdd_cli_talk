@@ -8,5 +8,11 @@
 * Install it on a new machine/environment
 
 !SLIDE 
-# Let's go!
+# fullstop
 
+!SLIDE commandline incremental
+
+    $ fullstop git://github.com/davetron5000/dotfiles.git
+    => clones dotfiles locally
+    => symlinks everything there to $HOME
+  

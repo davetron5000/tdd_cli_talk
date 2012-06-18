@@ -1,6 +1,7 @@
 !SLIDE bullets incremental
-* `mkdir fullstop`
-* `bundle gem fullstop`
+# Getting Started
+* `mkdir fullstop`?
+* `bundle gem fullstop`?
 
 !SLIDE bullets incremental
 # Step 0: Bootstrap
@@ -40,20 +41,12 @@
     Using bundler (1.0.15) 
     Your bundle is complete! Use `bundle show [gemname]` to see where a bundled gem is installed.
 
-!SLIDE bullets incremental
-# Aruba
-* Cucumber Steps for command-line
-* "When I run..."
-* "Then the exit status should not be 0"
-* "Then the stderr should contain..."
-* etc.
-
 !SLIDE commandline 
 # Bootstrap
 
     $ bin/fullstop --help
 
-!SLIDE commandline 
+!SLIDE commandline  incremental small
 # Bootstrap
 
     $ bin/fullstop --help
@@ -61,17 +54,29 @@
     $ rake test
     Started
     .
-    Finished in 0.000548 seconds.
+    Finished in 0.000395 seconds.
 
     1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
 
-    Test run options: --seed 5857
-    $ rake features
-    ...
+    Test run options: --seed 19867
+    Feature: My bootstrapped app kinda works
+      In order to get going on coding my awesome app
+      I want to have aruba and cucumber setup
+      So I don't have to do it myself
+
+      Scenario: App just runs
+        When I get help for "fullstop"
+        Then the exit status should be 0
+        And the banner should be present
+        And the banner should document that this app takes options
+        And the following options should be documented:
+          | --version |
+        And the banner should document that this app takes no arguments
 
     1 scenario (1 passed)
-    3 steps (3 passed)
-    0m0.126s
+    6 steps (6 passed)
+    0m0.248s
+    
     
 
 !SLIDE smaller
@@ -91,38 +96,47 @@
         And my dotfiles should be symlinked in my home directory
 _01_
 
-!SLIDE commandline smaller
+!SLIDE bullets incremental
+# Aruba
+* Cucumber Steps for command-line
+* "When I run..."
+* "Then the exit status should not be 0"
+* "Then the stderr should contain..."
+* etc.
 
-    $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/01)
-    Feature: Install my dotfiles
-      In order to set up a new user account quickly
-      As a developer with his dotfiles in git
-      I should be able to maintain them easily
 
-      Scenario: Symlink my dotfiles
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        When I successfully run `fullstop /tmp/testdotfiles`
-        Then my dotfiles should be checked out as "dotfiles" in my home directory
-        And my dotfiles should be symlinked in my home directory
+!SLIDE code small
 
-    1 scenario (1 undefined)
-    4 steps (1 skipped, 3 undefined)
-    0m0.007s
+<pre style="font-size: 20px">
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-    You can implement step definitions for undefined steps with these snippets:
+  Scenario: Symlink my dotfiles
+    <span class='ansi-33'>Given I have my dotfiles in git at "/tmp/testdotfiles"<span class='ansi-0'></span></span>
+    <span class='ansi-36'>When I successfully run `<span class='ansi-36'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-36'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-33'>Then my dotfiles should be checked out as "dotfiles" in my home directory<span class='ansi-0'></span></span>
+    <span class='ansi-33'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
-    Given /^I have my dotfiles in git at "([^"]*)"$/ do |arg1|
-      pending # express the regexp above with the code you wish you had
-    end
-
-    Then /^my dotfiles should be checked out as "([^"]*)" in my home directory$/ do |arg1|
-      pending # express the regexp above with the code you wish you had
-    end
-
-    Then /^my dotfiles should be symlinked in my home directory$/ do
-      pending # express the regexp above with the code you wish you had
-    end
+1 scenario (<span class='ansi-33'>1 undefined<span class='ansi-0'>)</span></span>
+4 steps (<span class='ansi-36'>1 skipped<span class='ansi-0'>, <span class='ansi-33'>3 undefined<span class='ansi-0'>)</span></span></span></span>
+0m0.006s
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span class='ansi-33'>You can implement step definitions for undefined steps with these snippets:<span class='ansi-0'></span></span>
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span class='ansi-33'>Given /^I have my dotfiles in git at "(.*?)"$/ do |arg1|<span class='ansi-0'></span></span>
+<span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
+<span class='ansi-33'>end<span class='ansi-0'></span></span>
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span class='ansi-33'>Then /^my dotfiles should be checked out as "(.*?)" in my home directory$/ do |arg1|<span class='ansi-0'></span></span>
+<span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
+<span class='ansi-33'>end<span class='ansi-0'></span></span>
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span class='ansi-33'>Then /^my dotfiles should be symlinked in my home directory$/ do<span class='ansi-0'></span></span>
+<span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
+<span class='ansi-33'>end<span class='ansi-0'></span></span>
+</pre>
 
 !SLIDE
 # Implement these steps
@@ -214,24 +228,35 @@ _01_
 
 _02_
 
-!SLIDE commandline  smaller
+!SLIDE code
+# `rake features`
+<pre style="font-size: 16px">
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-    $ rake features
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        When I successfully run `fullstop /tmp/testdotfiles`
-        Then my dotfiles should be checked out as "dotfiles" in my home directory
-          expected file?("/Users/davec/dotfiles/.bashrc") to return true, got false (RSpec::Expectations::ExpectationNotMetError)
-          features/fullstop.feature:9:in `Then my dotfiles should be checked out as "dotfiles" in my home directory'
-        And my dotfiles should be symlinked in my home directory
+  Scenario: Symlink my dotfiles
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+rake aborted!
+Cucumber failed
 
-    Failing Scenarios:
-    cucumber features/fullstop.feature:6
+Tasks: TOP => features
+(See full trace by running task with --trace)
+    <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-31'>Then my dotfiles should be checked out as "<span class='ansi-31'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-31'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+<span class='ansi-31'>      expected file?("/Users/davec/dotfiles/.bashrc") to return true, got false (RSpec::Expectations::ExpectationNotMetError)<span class='ansi-0'></span></span>
+<span class='ansi-31'>      features/fullstop.feature:9:in `Then my dotfiles should be checked out as "dotfiles" in my home directory'<span class='ansi-0'></span></span>
+    <span class='ansi-36'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
-    1 scenario (1 failed)
-    4 steps (1 failed, 1 skipped, 2 passed)
-    0m0.172s
-    rake aborted!
-    Cucumber failed
+<span class='ansi-31'>Failing Scenarios:<span class='ansi-0'></span></span>
+<span class='ansi-31'>cucumber features/fullstop.feature:6<span class='ansi-0'></span></span>
+
+1 scenario (<span class='ansi-31'>1 failed<span class='ansi-0'>)</span></span>
+4 steps (<span class='ansi-31'>1 failed<span class='ansi-0'>, <span class='ansi-36'>1 skipped<span class='ansi-0'>, <span class='ansi-32'>2 passed<span class='ansi-0'>)</span></span></span></span></span></span>
+0m0.164s
+</pre>
+    
 
 !SLIDE bullets incremental
 ## Then my dotfiles should be checked out as "dotfiles" in my home directory
@@ -303,35 +328,38 @@ _02_
 _03_
 
 !SLIDE commandline smaller
+<pre style="font-size: 18px">
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-    $ rake features
-    Feature: Install my dotfiles
-      In order to set up a new user account quickly
-      As a developer with his dotfiles in git
-      I should be able to maintain them easily
+  Scenario: Symlink my dotfiles
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+rake aborted!
+Cucumber failed
 
-      Scenario: Symlink my dotfiles
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        When I successfully run `fullstop /tmp/testdotfiles`
-        Then my dotfiles should be checked out as "dotfiles" in my home directory
-        And my dotfiles should be symlinked in my home directory
-          No such file or directory - /tmp/fakehome/.bashrc (Errno::ENOENT)
-          ./features/step_definitions/fullstop_steps.rb:40:in `initialize'
-          ./features/step_definitions/fullstop_steps.rb:40:in `open'
-          ./features/step_definitions/fullstop_steps.rb:40:in `block (2 levels) in <top (required)>'
-          ./features/step_definitions/fullstop_steps.rb:34:in `block (2 levels) in <top (required)>'
-          ./features/step_definitions/fullstop_steps.rb:33:in `each'
-          ./features/step_definitions/fullstop_steps.rb:33:in `/^my dotfiles should be symlinked in my home directory$/'
-          features/fullstop.feature:10:in `And my dotfiles should be symlinked in my home directory'
+Tasks: TOP => features
+(See full trace by running task with --trace)
+    <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-31'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
+<span class='ansi-31'>      No such file or directory - /tmp/fakehome/.bashrc (Errno::ENOENT)<span class='ansi-0'></span></span>
+<span class='ansi-31'>      ./features/step_definitions/fullstop_steps.rb:40:in `initialize'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      ./features/step_definitions/fullstop_steps.rb:40:in `open'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      ./features/step_definitions/fullstop_steps.rb:40:in `block (2 levels) in <top (required)>'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      ./features/step_definitions/fullstop_steps.rb:34:in `block (2 levels) in <top (required)>'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      ./features/step_definitions/fullstop_steps.rb:33:in `each'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      ./features/step_definitions/fullstop_steps.rb:33:in `/^my dotfiles should be symlinked in my home directory$/'<span class='ansi-0'></span></span>
+<span class='ansi-31'>      features/fullstop.feature:10:in `And my dotfiles should be symlinked in my home directory'<span class='ansi-0'></span></span>
 
-    Failing Scenarios:
-    cucumber features/fullstop.feature:6
+<span class='ansi-31'>Failing Scenarios:<span class='ansi-0'></span></span>
+<span class='ansi-31'>cucumber features/fullstop.feature:6<span class='ansi-0'></span></span>
 
-    1 scenario (1 failed)
-    4 steps (1 failed, 3 passed)
-    0m0.184s
-    rake aborted!
-    Cucumber failed
+1 scenario (<span class='ansi-31'>1 failed<span class='ansi-0'>)</span></span>
+4 steps (<span class='ansi-31'>1 failed<span class='ansi-0'>, <span class='ansi-32'>3 passed<span class='ansi-0'>)</span></span></span></span>
+0m0.173s
+</pre>
 
 !SLIDE  bullets incremental
 # We got farther; fix the next problem
@@ -370,22 +398,23 @@ _04_
 !SLIDE
 # GREEN!
 
-!SLIDE commandline smaller
-    $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/04)
-    Feature: Install my dotfiles
-      In order to set up a new user account quickly
-      As a developer with his dotfiles in git
-      I should be able to maintain them easily
+!SLIDE 
+<pre style="font-size: 22px">
+  Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-      Scenario: Symlink my dotfiles
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        When I successfully run `fullstop /tmp/testdotfiles`
-        Then my dotfiles should be checked out as "dotfiles" in my home directory
-        And my dotfiles should be symlinked in my home directory
+  Scenario: Symlink my dotfiles
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
-    1 scenario (1 passed)
-    4 steps (4 passed)
+1 scenario (<span class='ansi-32'>1 passed<span class='ansi-0'>)</span></span>
+4 steps (<span class='ansi-32'>4 passed<span class='ansi-0'>)</span></span>
+0m0.168s
+</pre>
 
 !SLIDE bullets incremental
 # Refactor
@@ -482,22 +511,23 @@ _04_
 # Is it a good refactor?
 _05_
 
-!SLIDE commandline smaller
-    $ rake features
-    (in /Users/davec/Projects/tdd_talk/fullstop/04)
-    Feature: Install my dotfiles
-      In order to set up a new user account quickly
-      As a developer with his dotfiles in git
-      I should be able to maintain them easily
+!SLIDE
+<pre style="font-size: 22px">
+  Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
 
-      Scenario: Symlink my dotfiles
-        Given I have my dotfiles in git at "/tmp/testdotfiles"
-        When I successfully run `fullstop /tmp/testdotfiles`
-        Then my dotfiles should be checked out as "dotfiles" in my home directory
-        And my dotfiles should be symlinked in my home directory
+  Scenario: Symlink my dotfiles
+    <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
-    1 scenario (1 passed)
-    4 steps (4 passed)
+1 scenario (<span class='ansi-32'>1 passed<span class='ansi-0'>)</span></span>
+4 steps (<span class='ansi-32'>4 passed<span class='ansi-0'>)</span></span>
+0m0.174s
+</pre>
 
 !SLIDE bullets incremental
 # We can now drive new features
