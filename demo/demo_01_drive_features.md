@@ -46,37 +46,42 @@
 
     $ bin/fullstop --help
 
-!SLIDE commandline  incremental small
+!SLIDE commandline incremental small
 # Bootstrap
 
-    $ bin/fullstop --help
+    $ bin/fullstop --help</em>
     Usage: fullstop [options]
-    $ rake test
-    Started
-    .
-    Finished in 0.000395 seconds.
 
-    1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
+!SLIDE code small
+# Bootstrap
 
-    Test run options: --seed 19867
-    Feature: My bootstrapped app kinda works
-      In order to get going on coding my awesome app
-      I want to have aruba and cucumber setup
-      So I don't have to do it myself
+<pre style="font-size: 22px;">
+<em>$ rake test</em>
+Started
+.
+Finished in 0.000395 seconds.
 
-      Scenario: App just runs
-        When I get help for "fullstop"
-        Then the exit status should be 0
-        And the banner should be present
-        And the banner should document that this app takes options
-        And the following options should be documented:
-          | --version |
-        And the banner should document that this app takes no arguments
+1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
 
-    1 scenario (1 passed)
-    6 steps (6 passed)
-    0m0.248s
-    
+Test run options: --seed 19867
+Feature: My bootstrapped app kinda works
+  In order to get going on coding my awesome app
+  I want to have aruba and cucumber setup
+  So I don't have to do it myself
+
+  Scenario: App just runs
+    <span class="ansi-32">When I get help for "<span class="ansi-1">fullstop</span>"
+    Then the exit status should be 0
+    And the banner should be present
+    And the banner should document that this app takes options
+    And the following options should be documented:
+      | --version |
+    And the banner should document that this app takes no arguments</span>
+
+1 scenario (<span class="ansi-32">1 passed</span>)
+6 steps (<span class="ansi-32">6 passed</span>)
+0m0.248s
+</pre> 
     
 
 !SLIDE smaller
@@ -108,6 +113,7 @@ _01_
 !SLIDE code small
 
 <pre style="font-size: 20px">
+<em>$ rake features</em>
 Feature: Install my dotfiles
   In order to set up a new user account quickly
   As a developer with his dotfiles in git
@@ -129,7 +135,7 @@ Feature: Install my dotfiles
 <span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
 <span class='ansi-33'>end<span class='ansi-0'></span></span>
 <span class='ansi-33'><span class='ansi-0'></span></span>
-<span class='ansi-33'>Then /^my dotfiles should be checked out as "(.*?)" in my home directory$/ do |arg1|<span class='ansi-0'></span></span>
+<span style="font-size: 94%;"><span class='ansi-33'>Then /^my dotfiles should be checked out as "(.*?)" in my home directory$/ do |arg1|<span class='ansi-0'></span></span></span>
 <span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
 <span class='ansi-33'>end<span class='ansi-0'></span></span>
 <span class='ansi-33'><span class='ansi-0'></span></span>
@@ -179,10 +185,9 @@ Feature: Install my dotfiles
       end
     end
 
-!SLIDE smaller
+!SLIDE smaller1
     @@@Ruby
-    Then 
-      /^my dotfiles should be symlinked in my home directory$/ do
+    Then /^my dotfiles should be symlinked in my home directory$/ do
       FILES.map { |file| 
         File.join(ENV['HOME'],file) 
       }.each do |file|
@@ -198,11 +203,11 @@ Feature: Install my dotfiles
     File.new(file).lstat.should be_symlink
 
 !SLIDE bullets incremental
-## `expected symlink? to return true, got false (RSpec::Expectations::ExpectationNotMetError)`
+### `expected symlink? to return true, got false (RSpec::Expectations::ExpectationNotMetError)`
 * Weaksauce
 * We deserve a better message
 
-!SLIDE smaller
+!SLIDE small1
 
     @@@Ruby
     RSpec::Matchers.define :be_a_symlink do
@@ -230,7 +235,7 @@ _02_
 
 !SLIDE code
 # `rake features`
-<pre style="font-size: 16px">
+<pre style="font-size: 20px">
 Feature: Install my dotfiles
   In order to set up a new user account quickly
   As a developer with his dotfiles in git
@@ -264,7 +269,7 @@ Tasks: TOP => features
 * Let's fix this
 * And only this
 
-!SLIDE smaller
+!SLIDE 
     @@@Ruby
     #!/usr/bin/env ruby -w
 
@@ -281,7 +286,7 @@ Tasks: TOP => features
     
     #
 
-!SLIDE smaller
+!SLIDE
     @@@Ruby
     #!/usr/bin/env ruby -w
 
@@ -306,7 +311,7 @@ Tasks: TOP => features
 !SLIDE
 # We are developing on production
 
-!SLIDE small
+!SLIDE small2
 # Change `ENV['HOME']` 
 
     @@@Ruby
@@ -328,7 +333,8 @@ Tasks: TOP => features
 _03_
 
 !SLIDE commandline smaller
-<pre style="font-size: 18px">
+# `$ rake features`
+<pre style="font-size: 20px">
 Feature: Install my dotfiles
   In order to set up a new user account quickly
   As a developer with his dotfiles in git
@@ -362,11 +368,12 @@ Tasks: TOP => features
 </pre>
 
 !SLIDE  bullets incremental
-# We got farther; fix the next problem
+# We got farther
+## Fix the next problem
 * "And my dotfiles should be symlinked in my home directory"
 * <span class="cuke-error">No such file or directory - /tmp/fakehome/.bashrc (Errno::ENOENT)</span>
 
-!SLIDE smaller
+!SLIDE small1
 
     @@@Ruby
     chdir ENV['HOME']
@@ -380,7 +387,7 @@ Tasks: TOP => features
     #
 _04_
 
-!SLIDE smaller
+!SLIDE small1
 
     @@@Ruby
     chdir ENV['HOME']

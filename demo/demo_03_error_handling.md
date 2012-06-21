@@ -54,10 +54,9 @@
       And the stderr should match /File exists/
       And the output should not contain a backtrace
 
-!SLIDE smaller
+!SLIDE smaller2
     @@@Ruby
-    Given 
-    /^the file "([^"]*)" exists in my home directory$/ do |file|
+    Given /^the file "([^"]*)" exists in my home directory$/ do |file|
       touch File.join(ENV['HOME'],file)
     end
 
@@ -113,13 +112,14 @@ Tasks: TOP => features
 
 !SLIDE
     @@@Ruby
-    
+ 
       main(ARGV[0],ENV['HOME'])
-    
-    
+  
+   
     
     #
 
+_09_
 !SLIDE
     @@@Ruby
     begin

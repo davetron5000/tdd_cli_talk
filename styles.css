@@ -114,7 +114,19 @@ blockquote p em {
 a:hover, a:visited, a {
   color: #508395;
 }
+.smaller1 pre {
+  font-size: 190%;
+}
+.smaller2 pre {
+  font-size: 180%;
+}
 
+.small1 pre {
+  font-size: 230%;
+}
+.small2 pre {
+  font-size: 275%;
+}
 code.result {
   font-weight: bold;
   color: #262626;

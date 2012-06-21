@@ -78,7 +78,7 @@ Tasks: TOP => features
 0m0.322s
 </pre>
 
-!SLIDE smaller
+!SLIDE small
 # Easiest fix ever
 
     @@@Ruby
@@ -94,7 +94,7 @@ Tasks: TOP => features
 
 _07_
 
-!SLIDE smaller
+!SLIDE small
 # Easiest fix ever
 
     @@@Ruby

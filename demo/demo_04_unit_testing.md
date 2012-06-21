@@ -173,11 +173,11 @@ Feature: Install my dotfiles
 
 !SLIDE small
 # Test
-## Setup
+## Givens
 
     @@@Ruby
     include Fullstop
-    def test_git_failure
+    def test_git_failure_causes_exception
       CLI.stubs(:chdir)
       CLI.stubs(:system).returns(false)
       CLI.stubs(:ln_s).raises(
@@ -193,7 +193,26 @@ _11_
 
 !SLIDE small
 # Test
-## Assertions
+## When
+
+    @@@Ruby
+    include Fullstop
+    def test_git_failure_causes_exception
+      CLI.stubs(:chdir)
+      CLI.stubs(:system).returns(false)
+      CLI.stubs(:ln_s).raises(
+              "Should not have been called")
+      
+        CLI.main('foo','foo')
+      
+      
+      
+    end
+
+_11_
+!SLIDE small
+# Test
+## Then
 
     @@@Ruby
     include Fullstop
