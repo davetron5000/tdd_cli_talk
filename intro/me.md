@@ -9,6 +9,12 @@
 
     $ who am i
     Dave Copeland / @davetron5000
+    $ history
+    1986  c64 basic
+    1991  C # vi cursor keys didn't work
+    1995  Perl
+    1998  Java
+    2008  Ruby
     $ ps
     Tech Lead at LivingSocial
 

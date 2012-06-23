@@ -15,11 +15,11 @@
    
         DOTFILES = 'dotfiles'
 
-        def      main(repo,link_dir)
-          chdir link_dir
+        def      main(repo,home_dir)
+          chdir home_dir
           %x[git clone #{repo} #{DOTFILES}]
 
-          dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+          dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
             ln_s file,'.'
           end
         end
@@ -45,11 +45,11 @@
       class CLI
         DOTFILES = 'dotfiles'
 
-        def self.main(repo,link_dir)
-          chdir link_dir
+        def self.main(repo,home_dir)
+          chdir home_dir
           %x["git clone #{repo} #{DOTFILES}"]
 
-          dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+          dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
             ln_s file,'.'
           end
         end
@@ -75,11 +75,11 @@
       class CLI
         DOTFILES = 'dotfiles'
 
-        def self.main(repo,link_dir)
-          chdir link_dir
+        def self.main(repo,home_dir)
+          chdir home_dir
           system("git clone #{repo} #{DOTFILES}")
 
-          dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+          dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
             ln_s file,'.'
           end
         end
@@ -98,6 +98,7 @@
 # `bin/fullstop`
 
     @@@Ruby
+
     
 
     begin
@@ -111,6 +112,7 @@
 # `bin/fullstop`
 
     @@@Ruby
+    require 'fullstop/cli'
     include Fullstop
 
     begin
@@ -163,12 +165,12 @@ Feature: Install my dotfiles
 !SLIDE bullets incremental
 # Approach
 * Any problem...
-* ...raise
+* ...raise (a useful message)
 * `bin/fullstop` already handles the UI
 
 !SLIDE bullets incremental
 # New test
-* `FileUtils` methods throw exceptions
+* `FileUtils` methods already throw exceptions
 * `system` returns `true` or `false`
 
 !SLIDE small
@@ -253,13 +255,13 @@ _11_
 # Fix
 
     @@@Ruby
-    def self.main(repo,link_dir)
-      chdir link_dir
+    def self.main(repo,home_dir)
+      chdir home_dir
       system("git clone #{repo} #{DOTFILES}")
       
       
 
-      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
         ln_s file,'.'
       end
     end
@@ -270,13 +272,13 @@ _12_
 # Fix
 
     @@@Ruby
-    def self.main(repo,link_dir)
-      chdir link_dir
+    def self.main(repo,home_dir)
+      chdir home_dir
       unless system("git clone #{repo} #{DOTFILES}")
         raise "'git clone #{repo} #{DOTFILES}' failed"
       end
 
-      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
         ln_s file,'.'
       end
     end
@@ -293,18 +295,50 @@ _12_
 
     1 tests, 2 assertions, 0 failures, 0 errors, 0 skips
 
+!SLIDE smaller
+# Refactor
+
+    @@@Ruby
+    def self.main(repo,home_dir)
+      chdir home_dir
+      unless system("git clone #{repo} #{DOTFILES}")
+        raise "'git clone #{repo} #{DOTFILES}' failed"
+      end
+
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
+        ln_s file,'.'
+      end
+    end
+
+    
+
+    #
+
+!SLIDE small
+# Refactor
+
+    @@@Ruby
+    unless  # ...
+      raise  # ...
+    end
+
+!SLIDE small
+# Refactor
+
+    @@@Ruby
+    "git clone #{repo} #{DOTFILES}"
 
 !SLIDE smaller
 # Refactor
 
     @@@Ruby
-    def self.main(repo,link_dir)
-      chdir link_dir
+    def self.main(repo,home_dir)
+      chdir home_dir
       unless system("git clone #{repo} #{DOTFILES}")
         raise "'git clone #{repo} #{DOTFILES}' failed"
       end
 
-      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
         ln_s file,'.'
       end
     end
@@ -319,11 +353,11 @@ _13_
 # Refactor
 
     @@@Ruby
-    def self.main(repo,link_dir)
-      chdir link_dir
+    def self.main(repo,home_dir)
+      chdir home_dir
       sh! "git clone #{repo} #{DOTFILES}"
 
-      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
         ln_s file,'.'
       end
     end

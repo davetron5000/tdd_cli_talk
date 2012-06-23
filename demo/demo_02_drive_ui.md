@@ -1,17 +1,33 @@
 !SLIDE subsection 
 # The UI sucks
 
-!SLIDE smaller
+!SLIDE commandline incremental
+
+    $ bin/fullstop --help
+    Usage: fullstop [options]
+
+!SLIDE commandline
+
+    $ bin/fullstop --help
+    Usage: fullstop [options]
+                    ^^^^^^^^^
+
+!SLIDE commandline
+
+    $ bin/fullstop --help
+    Usage: fullstop [options]
+                               ^^^^^^^^^
+
+
+!SLIDE smaller1
 
     @@@Cucumber
     Scenario: The UI is not sucky
       When I get help for "fullstop"
       Then the exit status should be 0
       And the banner should be present
-      And the banner should document that 
-        this app takes no options
-      And the banner should document that 
-        this app's arguments are:
+      And the banner should document that this app takes no options
+      And the banner should document that this app's arguments are:
           |repo|which is required|
       And there should be a one line summary of what the app does
 
@@ -24,11 +40,11 @@
     @@@Ruby
     When /^I get help for "([^"]*)"$/ do |app_name|
       @app_name = app_name
-      When %(I run `#{app_name} --help`)
+      step %(I run `#{app_name} --help`)
     end
 
     Then /^the banner should be present$/ do
-      Then %(the output should match /Usage: #{@app_name}/)
+      step %(the output should match /Usage: #{@app_name}/)
     end
 
 !SLIDE 

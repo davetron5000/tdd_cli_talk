@@ -29,6 +29,11 @@ body, .slide, h1, h2, h3, h4, h5, p, div {
 .fix {
   color: #50886b;
 }
+.cuke-error {
+  font-family: monospace;
+  font-style: normal;
+  color: #832e2f;
+}
 
 pre .ansi-31           { color: #990000; }
 pre .ansi-31 > .ansi-1 { color: #ff0000; }

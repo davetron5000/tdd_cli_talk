@@ -14,7 +14,9 @@
 
 
     $ methadone fullstop
-    # => basic gemified project
+    $ cd fullstop ; ls
+    Gemfile           bin/              lib/
+    features/         test/             Rakefile          fullstop.gemspec
     $ bundle install
     Fetching source index for http://rubygems.org/
     Using rack (1.3.2) 
@@ -41,22 +43,17 @@
     Using bundler (1.0.15) 
     Your bundle is complete! Use `bundle show [gemname]` to see where a bundled gem is installed.
 
-!SLIDE commandline 
+!SLIDE commandline incremental
 # Bootstrap
 
     $ bin/fullstop --help
-
-!SLIDE commandline incremental small
-# Bootstrap
-
-    $ bin/fullstop --help</em>
     Usage: fullstop [options]
+    $ rake
 
 !SLIDE code small
 # Bootstrap
 
 <pre style="font-size: 22px;">
-<em>$ rake test</em>
 Started
 .
 Finished in 0.000395 seconds.
@@ -82,7 +79,58 @@ Feature: My bootstrapped app kinda works
 6 steps (<span class="ansi-32">6 passed</span>)
 0m0.248s
 </pre> 
-    
+
+!SLIDE
+# The structure of tests
+
+!SLIDE
+# The structure of tests
+## Given
+### Establish the conditions for our test
+
+!SLIDE
+# The structure of tests
+## When
+### Execute the thing we're testing
+
+!SLIDE
+# The structure of tests
+## Then
+### Verify that the thing we're testing did whatever it's supposed to
+
+!SLIDE
+# Given
+## I have my dotfiles in a git repo
+
+!SLIDE
+# When
+## I run `fullstop` against that repo
+
+!SLIDE
+# Then
+## That repo should've been cloned
+
+!SLIDE
+# Then
+## That repo should've been cloned
+# And
+## our dotfiles should be symlinked from our home directory
+
+!SLIDE bullets incremental
+# The World's Shortest Cucumber Tutorial
+* Cucumber takes english like what we've just seen
+* Maps it to code
+* And runs it
+
+!SLIDE bullets incremental
+# Aruba
+* Set of pre-made Givens, Whens, and Thens
+* Made for testing CLI apps
+
+!SLIDE bullets incremental
+# Methadone
+* Includes more pre-made Givens, Whens, and Thens
+* To make it even *easier* to test CLI apps
 
 !SLIDE smaller
 # Let's add a feature
@@ -99,16 +147,43 @@ Feature: My bootstrapped app kinda works
         Then my dotfiles should be checked out as "dotfiles" 
           in my home directory
         And my dotfiles should be symlinked in my home directory
+
+_ _
+
+!SLIDE smaller
+# Let's add a feature
+
+    @@@ Cucumber
+    Feature: Install my dotfiles
+      In order to set up a new user account quickly
+      As a developer with his dotfiles in git
+      I should be able to maintain them easily
+
+
+
+
+
+
+    #
+
+_ _
+!SLIDE smaller
+# Let's add a feature
+
+    @@@ Cucumber
+
+
+
+
+
+      Scenario: Symlink my dotfiles
+        Given I have my dotfiles in git at "/tmp/testdotfiles"
+        When I successfully run `fullstop /tmp/testdotfiles`
+        Then my dotfiles should be checked out as "dotfiles" 
+          in my home directory
+        And my dotfiles should be symlinked in my home directory
+
 _01_
-
-!SLIDE bullets incremental
-# Aruba
-* Cucumber Steps for command-line
-* "When I run..."
-* "Then the exit status should not be 0"
-* "Then the stderr should contain..."
-* etc.
-
 
 !SLIDE code small
 
@@ -144,10 +219,140 @@ Feature: Install my dotfiles
 <span class='ansi-33'>end<span class='ansi-0'></span></span>
 </pre>
 
+!SLIDE code small
+
+<pre style="font-size: 20px">
+<em>$ rake features</em>
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
+
+  Scenario: Symlink my dotfiles
+
+    <span class='ansi-36'>When I successfully run `<span class='ansi-36'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-36'>`<span class='ansi-0'></span></span></span></span></span></span></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+
+!SLIDE code small
+
+<pre style="font-size: 20px">
+<em>$ rake features</em>
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
+
+  Scenario: Symlink my dotfiles
+    <span class='ansi-33'>Given I have my dotfiles in git at "/tmp/testdotfiles"<span class='ansi-0'></span></span>
+
+    <span class='ansi-33'>Then my dotfiles should be checked out as "dotfiles" in my home directory<span class='ansi-0'></span></span>
+    <span class='ansi-33'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+
+!SLIDE code small
+
+<pre style="font-size: 20px">
+<em>$ rake features</em>
+Feature: Install my dotfiles
+  In order to set up a new user account quickly
+  As a developer with his dotfiles in git
+  I should be able to maintain them easily
+
+  Scenario: Symlink my dotfiles
+    <span class='ansi-33'>Given I have my dotfiles in git at "/tmp/testdotfiles"<span class='ansi-0'></span></span>
+
+    <span class='ansi-33'>Then my dotfiles should be checked out as "dotfiles" in my home directory<span class='ansi-0'></span></span>
+    <span class='ansi-33'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
+
+
+
+
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span class='ansi-33'>You can implement step definitions for undefined steps with these snippets:<span class='ansi-0'></span></span>
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span class='ansi-33'>Given /^I have my dotfiles in git at "(.*?)"$/ do |arg1|<span class='ansi-0'></span></span>
+<span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
+<span class='ansi-33'>end<span class='ansi-0'></span></span>
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span style="font-size: 94%;"><span class='ansi-33'>Then /^my dotfiles should be checked out as "(.*?)" in my home directory$/ do |arg1|<span class='ansi-0'></span></span></span>
+<span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
+<span class='ansi-33'>end<span class='ansi-0'></span></span>
+<span class='ansi-33'><span class='ansi-0'></span></span>
+<span class='ansi-33'>Then /^my dotfiles should be symlinked in my home directory$/ do<span class='ansi-0'></span></span>
+<span class='ansi-33'>  pending # express the regexp above with the code you wish you had<span class='ansi-0'></span></span>
+<span class='ansi-33'>end<span class='ansi-0'></span></span>
+</pre>
+
 !SLIDE
 # Implement these steps
 
 !SLIDE smaller
+## `features/step_definitions/fullstop_steps.rb`
+    @@@Ruby
+    require 'fileutils'
+
+    include FileUtils
+
+    FILES = %w(.bashrc .inputrc .vimrc)
+
+    Given /^I have my dotfiles in git at "(.*)"$/ do |git_repo|
+      rm_rf git_repo, :secure => true if File.exists? git_repo
+      mkdir_p git_repo
+      chdir git_repo
+
+      FILES.each { |file| touch file }
+
+      git :init,   '.'
+      git :add,    '.'
+      git :commit, '-m "initial commit"'
+    end
+    
+ 
+  
+   
+    
+    #
+
+!SLIDE smaller
+## `features/step_definitions/fullstop_steps.rb`
     @@@Ruby
     require 'fileutils'
 
@@ -173,61 +378,32 @@ Feature: Install my dotfiles
       raise "Error running #{command}" unless $?.success?
     end
 
-
 !SLIDE smaller
+## `features/step_definitions/fullstop_steps.rb`
 
     @@@Ruby
     Then /^my dotfiles should be checked out as "([^"]*)" 
            in my home directory$/ do |dir|
       path = File.join(ENV['HOME'],dir)
       FILES.map{ |file| File.join(path,file) }.each do |file|
-        Then %(a file named "#{file}" should exist)
+        step%(a file named "#{file}" should exist)
       end
     end
 
 !SLIDE smaller1
+## `features/step_definitions/fullstop_steps.rb`
+
     @@@Ruby
     Then /^my dotfiles should be symlinked in my home directory$/ do
-      FILES.map { |file| 
-        File.join(ENV['HOME'],file) 
-      }.each do |file|
-        file.should be_a_symlink
+      files_in_home = FILES.map { |file| File.join(ENV['HOME'],file)  }
+
+      files_in_home.each do |file|
+        assert File.open(file).lstat.symlink?,
+               "#{file} was not a symlink"
       end
     end
 
 
-!SLIDE
-# Quick aside
-
-    @@@Ruby
-    File.new(file).lstat.should be_symlink
-
-!SLIDE bullets incremental
-### `expected symlink? to return true, got false (RSpec::Expectations::ExpectationNotMetError)`
-* Weaksauce
-* We deserve a better message
-
-!SLIDE small1
-
-    @@@Ruby
-    RSpec::Matchers.define :be_a_symlink do
-      match do |actual|
-        File.open(actual).lstat.symlink?
-      end
-
-      failure_message_for_should do |actual|
-        "expected that #{actual} would be a symlink"
-      end
-
-      failure_message_for_should_not do |actual|
-        "expected that #{actual} would NOT be a symlink"
-      end
-
-      description do
-        "be a symlink"
-      end
-    end
-        
 !SLIDE
 # NOW do we have a failing test?
 
@@ -310,6 +486,12 @@ Tasks: TOP => features
 
 !SLIDE
 # We are developing on production
+
+!SLIDE bullets incremental
+# Change `ENV['HOME']` 
+* Before each test
+* Set `$HOME` to some directory we control
+* Restore after
 
 !SLIDE small2
 # Change `ENV['HOME']` 
@@ -415,7 +597,7 @@ _04_
   Scenario: Symlink my dotfiles
     <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
     <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
-    <span class='ansi-32'>Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32' style="font-size: 92%;">Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
     <span class='ansi-32'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
 1 scenario (<span class='ansi-32'>1 passed<span class='ansi-0'>)</span></span>
@@ -425,20 +607,48 @@ _04_
 
 !SLIDE bullets incremental
 # Refactor
-* **No** variables
-* Horrible regexy `Dir` thing
-* repetition
+* `"dotfiles"` literal
+* `Dir["#{ENV['HOME']}/dotfiles/{*,.*}"]`
+* `unless File.basename(file) == '.' || File.basename(file) == '..'`
 * Backwards organization
 
 !SLIDE smaller
     @@@Ruby
     DOTFILES = 'dotfiles'
 
-    def main(repo,link_dir)
-      chdir link_dir
+    def main(repo,home_dir)
+      chdir home_dir
       %x[git clone #{repo} #{DOTFILES}]
 
-      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+
+
+
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #
+
+!SLIDE smaller
+    @@@Ruby
+    DOTFILES = 'dotfiles'
+
+    def main(repo,home_dir)
+      chdir home_dir
+      %x[git clone #{repo} #{DOTFILES}]
+
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
         ln_s file,'.'
       end
     end
@@ -462,11 +672,11 @@ _04_
     @@@Ruby
     DOTFILES = 'dotfiles'
 
-    def main(repo,link_dir)
-      chdir link_dir
+    def main(repo,home_dir)
+      chdir home_dir
       %x[git clone #{repo} #{DOTFILES}]
 
-      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
         ln_s file,'.'
       end
     end
@@ -490,11 +700,11 @@ _04_
     @@@Ruby
     DOTFILES = 'dotfiles'
 
-    def main(repo,link_dir)
-      chdir link_dir
+    def main(repo,home_dir)
+      chdir home_dir
       %x[git clone #{repo} #{DOTFILES}]
 
-      dotfiles_in(File.join(link_dir,DOTFILES)) do |file|
+      dotfiles_in(File.join(home_dir,DOTFILES)) do |file|
         ln_s file,'.'
       end
     end
@@ -528,7 +738,7 @@ _05_
   Scenario: Symlink my dotfiles
     <span class='ansi-32'>Given I have my dotfiles in git at "<span class='ansi-32'><span class='ansi-1'>/tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>"<span class='ansi-0'></span></span></span></span></span></span></span>
     <span class='ansi-32'>When I successfully run `<span class='ansi-32'><span class='ansi-1'>fullstop /tmp/testdotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>`<span class='ansi-0'></span></span></span></span></span></span></span>
-    <span class='ansi-32'>Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
+    <span class='ansi-32' style="font-size: 92%;">Then my dotfiles should be checked out as "<span class='ansi-32'><span class='ansi-1'>dotfiles<span class='ansi-0'><span class='ansi-0'><span class='ansi-32'>" in my home directory<span class='ansi-0'></span></span></span></span></span></span></span>
     <span class='ansi-32'>And my dotfiles should be symlinked in my home directory<span class='ansi-0'></span></span>
 
 1 scenario (<span class='ansi-32'>1 passed<span class='ansi-0'>)</span></span>
