@@ -19,5 +19,6 @@
     Tech Lead at LivingSocial
 
 !SLIDE center
-<img src="cover.png" height="720"/>
+### `bit.ly/clibook` | `Copeland_Scotland_20%`
+<img src="cover.png" height="680"/>
 

@@ -19,4 +19,4 @@
 * [http://github.com/davetron5000/methadone](http://github.com/davetron5000/methadone)
 * [http://github.com/cucumber/aruba](http://github.com/cucumber/aruba)
 * [tdd-ruby-cli.heroku.com](http://tdd-ruby-cli.heroku.com)
-* Please Rate! [spkr8.com/t/8523](http://spkr8.com/t/8523)
+* [bit.ly/clibook](http://bit.ly/clibook) 20% off with code `Copeland_Scotland_20%`
